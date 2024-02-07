@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="19">
+      <module name="lol.ezra.VFS" target="20" />
+      <module name="lol.ezra.VFS.main" target="20" />
+      <module name="lol.ezra.VFS.test" target="20" />
+      <module name="VFS-frontend" target="20" />
+      <module name="VFS-frontend.main" target="20" />
+      <module name="VFS-frontend.test" target="20" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
