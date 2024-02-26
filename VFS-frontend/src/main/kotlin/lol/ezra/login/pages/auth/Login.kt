@@ -1,5 +1,6 @@
-package lol.ezra.login.pages
+package lol.ezra.login.pages.auth
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,28 +18,29 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import client
 import io.ktor.client.request.*
 import io.ktor.http.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import lol.ezra.login.ColorPallet
+import lol.ezra.login.pages.teacher.AdminPage
 
-object LoginPage : Screen {
+object Login : Screen {
 
 
    @Composable
    override fun Content() {
       MaterialTheme {
 
-
          Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().background(ColorPallet.BACKGROUNDS.c),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-         ) {
+            horizontalAlignment = Alignment.CenterHorizontally,
+
+            ) {
 
             Text("Login")
             var message by remember { mutableStateOf("") }
             Text(message)
-            var username by remember { mutableStateOf("") }
-            var password by remember { mutableStateOf("") }
+            var username by remember { mutableStateOf("shmezi") }
+            var password by remember { mutableStateOf("123456789") }
             TextField(username, {
                username = it
             }, placeholder = {
@@ -51,24 +53,28 @@ object LoginPage : Screen {
             val navigator = LocalNavigator.currentOrThrow
             Button({
                runBlocking {
-                  val status = client.post("http://localhost:8080/auth/login") {
+                  val call = client.post("http://localhost:8080/auth/login") {
                      parameter("username", username)
                      parameter("password", password)
-                  }.status
+                  }
+                  val status = call.status
                   if (status == HttpStatusCode.OK) {
-                     navigator.push(UserPage)
+                     navigator.push(AdminPage)//TODO This is purely for testing
                      return@runBlocking
                   }
                   if (status == HttpStatusCode.Forbidden) {
                      message = "Wrong credentials!"
-                     delay(500)
-                     message = ""
                   }
                }
             }) {
                Text("Login")
             }
 
+            Button({
+               navigator.push(Register)
+            }) {
+               Text("Register")
+            }
          }
       }
    }

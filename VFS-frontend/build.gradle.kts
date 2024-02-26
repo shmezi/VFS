@@ -23,21 +23,21 @@ dependencies {
    // (in a separate module for demo project and in testMain).
    // With compose.desktop.common you will also lose @Preview functionality
    implementation(compose.desktop.currentOs)
-   val voyagerVersion = "1.0.0"
+   implementation("io.ktor:ktor-client-apache:2.3.7")
+
    val ktor_version = "2.3.7"
    val logback_version = "1.4.14"
    // Multiplatform
 
+   val voyagerVersion = "1.0.0"
+   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
    // Navigator
    implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
    implementation("cafe.adriel.voyager:voyager-screenmodel:$voyagerVersion")
    implementation("cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyagerVersion")
-
-   // TabNavigator
    implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
-
-   // Transitions
    implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
+
    implementation("io.ktor:ktor-client-core:$ktor_version")
    implementation("io.ktor:ktor-client-cio:$ktor_version")
    implementation("io.ktor:ktor-client-cio-jvm:2.3.7")
@@ -47,6 +47,8 @@ dependencies {
    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
    implementation(project(":VFS-common"))
+   implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
+   implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 }
 
 compose.desktop {

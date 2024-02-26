@@ -1,7 +1,9 @@
 package lol.ezra
 
-enum class UserType {
-   TEACHER,
-   PARENT,
-   DOCTOR
+import kotlinx.serialization.Serializable
+@Serializable
+enum class UserType(val prettyPrint:String) {
+   ADMIN("Admin"),
+   PARENT("Parent"),
+   DOCTOR("Doctor")
 }

@@ -1,0 +1,101 @@
+package lol.ezra.login.pages.auth
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import client
+import io.ktor.client.request.*
+import io.ktor.http.*
+import kotlinx.coroutines.runBlocking
+import lol.ezra.UserType
+import lol.ezra.requests.Register
+import url
+
+object Register : Screen {
+   @Composable
+   override fun Content() {
+      var name by remember { mutableStateOf("") }
+      var last by remember { mutableStateOf("") }
+      var id by remember { mutableStateOf("") }
+
+      var password by remember { mutableStateOf("") }
+      var password2 by remember { mutableStateOf("") }
+
+
+      var expanded by remember { mutableStateOf(false) }
+      var selection by remember { mutableStateOf<UserType?>(null) }
+      Column(
+         Modifier.horizontalScroll(rememberScrollState()).fillMaxSize(),
+         horizontalAlignment = Alignment.CenterHorizontally,
+         verticalArrangement = Arrangement.Center
+      ) {
+         Text("Register")
+         TextField(name, {
+            name = it
+         }, placeholder = {
+            Text("Name")
+         })
+
+         TextField(last, {
+            last = it
+         }, placeholder = {
+            Text("Last name")
+         })
+         TextField(id, {
+            id = it
+         }, placeholder = {
+            Text("ID")
+         })
+
+         TextField(password, {
+            password = it
+         }, placeholder = { Text("Password") }, visualTransformation = PasswordVisualTransformation()
+         )
+         TextField(password2, {
+            password2 = it
+         }, placeholder = { Text("Repeat password") }, visualTransformation = PasswordVisualTransformation()
+         )
+         Box {
+            IconButton({ expanded = true }) {
+               Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                  Text("${selection?.prettyPrint ?: "Select type"} ")
+                  Icon(painterResource("arrow.png"), "arrow", Modifier.size(10.dp))
+               }
+            }
+            DropdownMenu(expanded = expanded, {
+               expanded = false
+            }) {
+               UserType.entries.forEach {
+                  DropdownMenuItem({
+                     selection = it
+                  }) {
+                     Text(it.prettyPrint)
+                  }
+               }
+            }
+         }
+
+         Button({
+            runBlocking {
+               client.post("auth/register".url()) {
+                  contentType(ContentType.Application.Json)
+                  setBody(Register(id, name, last, "na", setOf(selection ?: return@runBlocking), password))
+               }
+            }
+
+
+         }) {
+            Text("Register")
+         }
+      }
+   }
+}

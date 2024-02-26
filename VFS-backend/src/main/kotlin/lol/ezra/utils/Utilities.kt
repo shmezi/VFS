@@ -6,8 +6,6 @@ import lol.ezra.PublicUser
 import lol.ezra.login.Database
 import lol.ezra.login.LoginSession
 import org.intellij.lang.annotations.Language
-import java.io.FileInputStream
-import java.util.*
 
 
 private const val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz"
@@ -15,11 +13,11 @@ fun randomString(length: Int) = (0 .. length).map { chars.random() }.joinToStrin
 
 fun js(@Language("javascript") js: String) = js
 
-private val props = Properties().apply {
-   load(FileInputStream("settings.properties"))
-}
-
-fun setting(setting: String) = props.getProperty(setting)
+//private val props = Properties().apply {
+//   load(FileInputStream("settings.properties"))
+//}
+//
+//fun setting(setting: String) = props.getProperty(setting)
 suspend fun ApplicationCall.user(): PublicUser? {
    val session = principal<LoginSession>() ?: return null
    return Database.getUser(session.username, session.token)?.public()

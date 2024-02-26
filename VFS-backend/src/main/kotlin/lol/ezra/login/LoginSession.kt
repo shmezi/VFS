@@ -12,25 +12,26 @@ import io.ktor.server.sessions.*
 data class LoginSession(var username: String, var token: String) : Principal
 
 fun Application.loginSessionSetup() {
-  install(Sessions) {
-    cookie<LoginSession>("login-session")
-  }
+   install(Sessions) {
+      cookie<LoginSession>("login-session")
+   }
+
 }
 
 fun Application.loginAuth() {
-  install(Authentication) {
-    session<LoginSession>("auth") {
-      validate { session ->
-        if (Database.checkToken(session.username, session.token))
-          session
-        else null
+   install(Authentication) {
+      session<LoginSession>("auth") {
+         validate { session ->
+            if (Database.checkToken(session.username, session.token))
+               session
+            else null
+
+         }
+         challenge {
+            call.respondRedirect("/login")
+         }
 
       }
-      challenge {
-        call.respondRedirect("/login")
-      }
 
-    }
-
-  }
+   }
 }

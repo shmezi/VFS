@@ -5,12 +5,14 @@ import com.mongodb.kotlin.client.coroutine.MongoClient
 import kotlinx.coroutines.flow.firstOrNull
 import lol.ezra.*
 import lol.ezra.struct.*
+import lol.ezra.UserType
+import lol.ezra.utils.pq
 import lol.ezra.utils.randomString
 import org.mindrot.jbcrypt.BCrypt
 
 
 object Database {
-   private val mongo = MongoClient.create("mongodb://localhost:27017").getDatabase("DMS")
+   private val mongo = MongoClient.create("mongodb://localhost:27017").getDatabase("VFS")
    private val userDB = mongo.getCollection<User>("users")
    private val classDB = mongo.getCollection<Class>("classes")
    private val teacherDb = mongo.getCollection<Teacher>("teachers")
@@ -125,7 +127,7 @@ object Database {
       userDB.insertOne(user)
       roles.forEach {
          when (it) {
-            UserType.TEACHER -> teacherDb.insertOne(Teacher(id, mutableSetOf()))
+            UserType.ADMIN -> teacherDb.insertOne(Teacher(id, mutableSetOf()))
             UserType.PARENT -> parentDb.insertOne(Parent(id, mutableSetOf()))
             UserType.DOCTOR -> TODO()
          }
@@ -162,8 +164,10 @@ object Database {
    suspend fun newToken(id: String?, pwd: String?): String? {
       id ?: return null
       pwd ?: return null
-      if (!(validateUsername(id) && validatePassword(pwd))) return null
-      val user = userDB.find(eq("_id", id)).firstOrNull() ?: return null
+      id.pq()
+      pwd.pq()
+//      if (!(validateUsername(id) && validatePassword(pwd))) return null
+      val user = userDB.find(eq("_id", id)).firstOrNull().pq() ?: return null
       if (!checkPassword(user.pwd, pwd)) return null
 
       val token = bakeCookie()

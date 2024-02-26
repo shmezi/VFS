@@ -1,4 +1,4 @@
-package lol.ezra.login.pages
+package lol.ezra.login.pages.auth
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,14 +9,17 @@ import cafe.adriel.voyager.core.screen.Screen
 import getUser
 import kotlinx.coroutines.runBlocking
 
-object UserPage : Screen {
+object User : Screen {
    @Composable
    override fun Content() {
       val user = runBlocking { getUser() }
       MaterialTheme {
          Column {
             Row {
-               Text("Hello, ${user.name} ${user.lastName}")
+
+               Text(user.name)
+
+//               Text("Hello, ${user.name} ${user.lastName}")
             }
          }
       }

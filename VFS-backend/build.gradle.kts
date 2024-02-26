@@ -20,12 +20,12 @@ dependencies {
    implementation("io.ktor:ktor-server-html-builder")
    implementation("io.ktor:ktor-server-html-builder-jvm")
    implementation("org.jetbrains:kotlin-css-jvm:1.0.0-pre.129-kotlin-1.4.20")
-   implementation("io.ktor:ktor-server-content-negotiation-jvm")
-   implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
-   implementation("io.ktor:ktor-server-cio-jvm")
+   implementation("io.ktor:ktor-server-content-negotiation")
+   implementation("io.ktor:ktor-serialization-kotlinx-json")
+      implementation("io.ktor:ktor-server-cio-jvm")
+   implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
 
    implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.10.1")
-
 // https://mvnrepository.com/artifact/org.springframework/spring-jcl
    implementation("org.mindrot:jbcrypt:0.4")
 }

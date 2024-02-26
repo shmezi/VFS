@@ -1,6 +1,5 @@
 package lol.ezra.struct
 
-import io.ktor.server.auth.*
 import lol.ezra.PublicUser
 import lol.ezra.UserType
 import org.bson.codecs.pojo.annotations.BsonId
