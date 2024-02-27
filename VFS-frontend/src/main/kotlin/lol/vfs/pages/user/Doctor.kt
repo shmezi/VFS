@@ -10,12 +10,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
-import lol.vfs.ColorPallet
-import lol.vfs.bg
-import lol.vfs.getClasses
+import lol.vfs.assets.ColorPallet
+import lol.vfs.assets.bg
 import lol.vfs.pages.components.ClassPanel
 import lol.vfs.pages.components.StudentPanel
 import lol.vfs.db.Student
+import lol.vfs.utils.classes
 
 object Doctor : Screen {
    @Composable
@@ -29,7 +29,7 @@ object Doctor : Screen {
             Modifier.weight(0.3f).verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
          ) {
-            getClasses().forEach {
+           classes.forEach {
                ClassPanel(it) { clazz, selected ->
                   if (selected.value) students.addAll(clazz.students)
                   else students.removeAll(clazz.students)

@@ -1,4 +1,4 @@
-package lol.vfs
+package lol.vfs.assets
 
 import androidx.compose.foundation.background
 import androidx.compose.ui.Modifier

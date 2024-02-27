@@ -18,7 +18,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
-import lol.vfs.ColorPallet
+import lol.vfs.assets.ColorPallet
 import lol.vfs.client
 import lol.vfs.pages.user.Doctor
 import lol.vfs.url
