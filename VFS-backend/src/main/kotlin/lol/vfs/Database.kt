@@ -45,7 +45,7 @@ object Database {
    }
 
 
-//:::::::::::::::::::::::::::::::::::::::::::::::::::::::://
+   //:::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 //                     User Database                      //
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::://
    private fun bakeCookie() = randomString(16)
@@ -118,18 +118,17 @@ object Database {
       lastName: String,
       image: String,
       password: String,
-      vararg roles: UserType
+      role: UserType
    ): User {
       val salt = BCrypt.gensalt()
       val user =
-         User(id, BCrypt.hashpw(password, salt), salt, name, lastName, image, mutableListOf(), roles.toMutableSet())
+         User(id, BCrypt.hashpw(password, salt), salt, name, lastName, image, mutableListOf(), role)
       userDB.insertOne(user)
-      roles.forEach {
-         when (it) {
-            UserType.ADMIN -> teacherDb.insertOne(Teacher(id, mutableSetOf()))
-            UserType.PARENT -> parentDb.insertOne(Parent(id, mutableSetOf()))
-            UserType.DOCTOR -> TODO()
-         }
+      when (role) {
+         UserType.ADMIN -> teacherDb.insertOne(Teacher(id, mutableSetOf()))
+         UserType.PARENT -> parentDb.insertOne(Parent(id, mutableSetOf()))
+         UserType.DOCTOR -> TODO()
+
       }
 
       return user

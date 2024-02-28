@@ -1,6 +1,7 @@
 package lol.vfs.db
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a student at the school
@@ -9,14 +10,12 @@ import kotlinx.serialization.SerialName
  * @param lastName The last name of the student
  * @param medicalTests The tests student has gone through TestID | Test Result
  */
+@Serializable
 data class Student(
    @SerialName("_id")
    val id: String,
    val name: String,
    val lastName: String,
-   val medicalTests: MutableMap<String, String?>
-
+   val medicalTests: MutableMap<String, TestResult>
 ) {
-
-
 }

@@ -17,6 +17,10 @@ enum class ColorPallet(
    SECONDARY(241, 249, 255);
 
    val c = Color(r, g, b)
+
+   companion object {
+      fun Modifier.bg(color: ColorPallet) = background(color.c)
+
+   }
 }
 
-fun Modifier.bg(color: ColorPallet) = background(color.c)

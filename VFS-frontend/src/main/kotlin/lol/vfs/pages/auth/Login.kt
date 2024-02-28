@@ -20,9 +20,11 @@ import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import lol.vfs.assets.ColorPallet
 import lol.vfs.client
-import lol.vfs.pages.user.Doctor
-import lol.vfs.url
+import lol.vfs.getUser
+import lol.vfs.pages.user.Admin
+import lol.vfs.pages.user.Parent
 import lol.vfs.requests.LoginRequest
+import lol.vfs.url
 
 object Login : Screen {
 
@@ -60,7 +62,14 @@ object Login : Screen {
                   }
                   val status = call.status
                   if (status == HttpStatusCode.OK) {
-                     navigator.push(Doctor)//TODO This is purely for testing
+
+                     navigator.push(
+                        when (getUser().type) {
+                           lol.vfs.db.UserType.ADMIN -> Admin
+                           lol.vfs.db.UserType.PARENT -> Parent
+                           lol.vfs.db.UserType.DOCTOR -> TODO()
+                        }
+                     )
                      return@runBlocking
                   }
 

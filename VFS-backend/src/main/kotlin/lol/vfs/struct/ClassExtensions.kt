@@ -6,7 +6,7 @@ import lol.vfs.db.*
 
 suspend fun Class.getStudents() = students.map { Database.getStudent(it.id) }
 suspend fun Class.assignTest(test: MedTest) {
-   getStudents().forEach { it?.medicalTests?.set(test.name, null) }
+   getStudents().forEach { it?.medicalTests?.set(test.name,TestResult()) }
 }
 
 suspend fun Parent.getKids(): Set<Student> {

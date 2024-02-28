@@ -22,7 +22,7 @@ data class User(
    var lastName: String,
    var image: String,
    val validTokens: MutableList<String>,
-   val userTypes: MutableSet<UserType>
+   val userTypes: UserType
 ) {
-   fun public() = UserRequest(id, name, lastName, image, userTypes)
+   fun public() = UserRequest(id, name, lastName, userTypes)
 }
