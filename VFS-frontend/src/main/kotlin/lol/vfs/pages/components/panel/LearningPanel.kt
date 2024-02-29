@@ -6,8 +6,6 @@ import lol.vfs.extensions.doneTests
 import lol.vfs.extensions.approved
 
 @Composable
-fun ClassPanel(clazz: Class, onClick: (clazz: Class, selected: Boolean) -> Unit) {
-   StatusPanel(clazz.prettyPrint,clazz.doneTests(), clazz.approved()) {
-      onClick(clazz, it)
-   }
+fun LearningPanel() {
+
 }

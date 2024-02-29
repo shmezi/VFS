@@ -49,6 +49,10 @@ dependencies {
    implementation(project(":VFS-common"))
    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
+   implementation("io.coil-kt:coil:3.0.0-alpha05")
+
+implementation("io.coil-kt:coil-compose:3.0.0-alpha05")
+
 }
 
 compose.desktop {

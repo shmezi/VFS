@@ -15,31 +15,32 @@ enum class Status(private val image: String, val description: String) {
    /**
     * Indicating that a test has been done / vaccine given etc.
     */
-   DONE("done", "Complete"),
+   DONE("done", "מסוים"),
 
    /**
     * Indicates the parent has not responded / denied the given treatment/test
     */
-   DENIED("denied", "Unapproved"),
+   DENIED("denied", "לא מאושר"),
 
    /**
     * Indicates the parent has approved the given treatment/test
     */
-   APPROVED("approved", "Approved"),
+   APPROVED("approved", "מאושר"),
 
    /**
     * Indication for classes indicating that some of the students have approved and others havent
     */
-   PARTIAL("partial", "Partially approved");
+   PARTIAL("partial", "חלקית מאושר");
 
    @Composable
    fun r() = painterResource("assets/status/$image.png")
 
    @Composable
    fun i() = Image(r(), description, contentScale = ContentScale.Fit, modifier = Modifier.size(20.dp))
-companion object{
-   @Composable
-fun Boolean.status() = (if (this) Status.APPROVED else Status.DENIED).i()
-}
+
+   companion object {
+      @Composable
+      fun Boolean.status() = (if (this) Status.APPROVED else Status.DENIED)
+   }
 }
 

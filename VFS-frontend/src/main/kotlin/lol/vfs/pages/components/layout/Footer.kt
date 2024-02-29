@@ -44,9 +44,9 @@ fun User(user: UserRequest) {
 @Composable
 fun Explanation(icon: Status) {
    Row(verticalAlignment = Alignment.CenterVertically) {
-      icon.i()
-      5.w()
       Text(icon.description)
+      5.w()
+      icon.i()
    }
 }
 

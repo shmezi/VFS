@@ -1,8 +1,6 @@
 package lol.vfs.utils
-
-import lol.vfs.db.Class
-import lol.vfs.db.Grade
-import lol.vfs.db.Student
+//SDS
+import lol.vfs.db.*
 
 /**
  * Sample data set
@@ -11,7 +9,7 @@ import lol.vfs.db.Student
 
 fun ffirst(): String {
    val names = listOf(
-      "אמה", "ליאם", "אוליביה", "נוח", "אווה", "איזבלה", "סופיה", "ג'קסון",
+      "אמה", "ליאם", "אוליביה", "נוח", "אווה", "איזבלה", "סופיה", "גקסון",
       "מיה", "לוקאס", "לוגאן", "איתן", "אמיליה", "הרפר", "אוולין", "אביגיל",
       "בנימין", "אלה", "סקרלט", "איידן", "גרייס", "קמילה", "לונה", "אריה",
       "קלואי", "אייזק", "זואי", "קיילב", "מילה", "הנרי"
@@ -22,8 +20,8 @@ fun ffirst(): String {
 
 fun rlast(): String {
    val lastNames = listOf(
-      "סמית'", "ג'ונסון", "וויליאמס", "ג'ונס", "בראון", "דיוויס", "מילר", "וילסון",
-      "מור", "טיילור", "אנדרסון", "תומס", "ג'קסון", "וויט", "האריס", "מרטין",
+      "סמית", "גונסון", "וויליאמס", "גונס", "בראון", "דיוויס", "מילר", "וילסון",
+      "מור", "טיילור", "אנדרסון", "תומס", "גקסון", "וויט", "האריס", "מרטין",
       "תומפסון", "גרסיה", "מרטינז", "רובינסון", "קלארק", "רודריגז", "לואיס", "לי",
       "ווקר", "הול", "אלן", "יאנג", "קינג", "רייט"
    )
@@ -42,9 +40,18 @@ fun generateIdNumbers(count: Int): List<Long> {
    return idNumbers
 }
 
+fun randBoolean() = arrayOf(false, true).random()
+fun randResult() = arrayOf(null, "Hello result").random()
+
 val students = mutableListOf<Student>().apply {
    for (id in generateIdNumbers(300)) {
-      add(Student(id.toString(), ffirst(), rlast(), mutableMapOf()))
+      add(Student(id.toString(), ffirst(), rlast(), mutableMapOf<String, TestResult>().apply {
+         this["killing"] = TestResult(randBoolean(), randResult())
+         this["kissing"] = TestResult(randBoolean(), randResult())
+      }, mutableMapOf<String, Boolean>().apply {
+         this["Really"] = randBoolean()
+         this["Wow"] = randBoolean()
+      }))
    }
 }.toList()
 val classes = mutableListOf<Class>().apply {
@@ -74,3 +81,6 @@ val grades = mutableListOf<Grade>().apply {
       repeat(2) { sCopy.removeFirst() }
    }
 }.toList()
+val learning = mutableListOf<StudyData>().apply {
+
+}

@@ -8,12 +8,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import lol.vfs.assets.Status
-import lol.vfs.db.Class
-import lol.vfs.db.Grade
-import lol.vfs.db.Student
-import lol.vfs.db.UserType
+import lol.vfs.db.*
+
 
 fun List<Boolean>.bstatus(): Status {
+   if (this.isEmpty()) return Status.APPROVED
    var status = Status.DENIED
    for (test in this) {
       if (status == Status.DENIED && test) {
@@ -28,25 +27,32 @@ fun List<Boolean>.bstatus(): Status {
    return status
 }
 
-fun Student.status() = medicalTests.values.map { it.approved }.bstatus()
-
 
 fun List<Status>.sstatus(): Status {
-   var status = Status.DENIED
-   for (s in this) {
-      if (status == Status.DENIED && (s == Status.APPROVED || s == Status.PARTIAL)) {
-         status = Status.PARTIAL
-         continue
-      }
-      if (status == Status.PARTIAL && s == Status.DENIED) return Status.PARTIAL
-   }
-   if (status == Status.PARTIAL) return Status.APPROVED
-   return status
+   if (this.isEmpty()) return Status.APPROVED
+   if (!contains(Status.DENIED) && !contains(Status.PARTIAL)) return Status.APPROVED
+   if (!contains(Status.PARTIAL) && !contains(Status.APPROVED)) return Status.DENIED
+   return Status.PARTIAL
 }
 
-fun Class.status() = this.students.map { it.status() }.sstatus()
+fun TestResult.status(): Status {
+   return when {
+      !approved -> Status.DENIED
+      approved && result == null -> Status.APPROVED
+      else -> Status.DONE
+   }
+}
 
-fun Grade.status() = this.classes.map { it.status() }.sstatus()
+fun Student.approved() = medicalTests.values.map { it.approved }.bstatus()
+
+fun Class.approved() = this.students.map { it.approved() }.sstatus()
+
+fun Grade.approved() = this.classes.map { it.approved() }.sstatus()
+
+fun Student.doneTests() = medicalTests.values.map { it.result != null }.bstatus()
+fun Class.doneTests() = this.students.map { it.doneTests() }.sstatus()
+fun Grade.doneTests() = this.classes.map { it.doneTests() }.sstatus()
+
 
 @Composable
 fun UserType.r() = painterResource("assets/user/$image.png")

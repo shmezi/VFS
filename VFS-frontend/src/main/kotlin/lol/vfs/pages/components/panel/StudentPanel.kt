@@ -16,10 +16,7 @@ import lol.vfs.assets.ColorPallet
 import lol.vfs.db.Class
 import lol.vfs.db.Grade
 import lol.vfs.db.Student
-import lol.vfs.extensions.h
-import lol.vfs.extensions.sp
-import lol.vfs.extensions.status
-import lol.vfs.extensions.w
+import lol.vfs.extensions.*
 
 @Composable
 fun StudentPanel(
@@ -50,9 +47,9 @@ fun StudentPanel(
          Text("${clazz.id}/${grade.id}")
          3.h()
          Row {
-            student.status().i()
+            student.approved().i()
             3.w()
-            student.status().i()
+            student.doneTests().i()
          }
       }
       Column(Modifier.weight(7f), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.End) {

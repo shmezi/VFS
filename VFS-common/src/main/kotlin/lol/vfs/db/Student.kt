@@ -16,6 +16,8 @@ data class Student(
    val id: String,
    val name: String,
    val lastName: String,
-   val medicalTests: MutableMap<String, TestResult>
+   val medicalTests: MutableMap<String, TestResult>,
+   val medicalTreatments: MutableMap<String, Boolean>
 ) {
+
 }
