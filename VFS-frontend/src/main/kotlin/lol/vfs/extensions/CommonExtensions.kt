@@ -1,8 +1,10 @@
 package lol.vfs.extensions
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -42,6 +44,13 @@ fun TestResult.status(): Status {
       else -> Status.DONE
    }
 }
+
+@Composable
+fun StudyData.r() = painterResource("assets/learning/$image")
+
+@Composable
+fun StudyData.i(modifier: Modifier = Modifier) =
+   Image(r(), description, contentScale = ContentScale.FillBounds, modifier = modifier)
 
 fun Student.approved() = medicalTests.values.map { it.approved }.bstatus()
 

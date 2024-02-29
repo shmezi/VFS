@@ -25,7 +25,7 @@ import lol.vfs.utils.studentClass
 import lol.vfs.utils.studentGrade
 
 
-object Admin : Screen {
+object Doctor : Screen {
 
    @Composable
    override fun Content() {

@@ -11,4 +11,6 @@ data class StudyData(
    val shortDescription: String,
    val description: String,
    val image: String,
-   )
+   ){
+
+}

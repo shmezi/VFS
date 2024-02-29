@@ -8,13 +8,21 @@ import lol.vfs.assets.ColorPallet.Companion.bg
 import lol.vfs.requests.UserRequest
 
 @Composable
-fun PageLayout(user: UserRequest, scope: @Composable ColumnScope.() -> Unit) {
-   Column(Modifier.fillMaxSize()) {
-      Column(Modifier.weight(10f).fillMaxWidth()) {
-         scope()
+fun PageLayout(
+   user: UserRequest,
+   layer: @Composable BoxScope.() -> Unit = {},
+   scope: @Composable ColumnScope.() -> Unit
+) {
+   Box {
+      Column(Modifier.fillMaxSize()) {
+         Column(Modifier.weight(10f).fillMaxWidth()) {
+            scope()
+
+         }
+         Column(Modifier.bg(ColorPallet.TEXTP).weight(1f), verticalArrangement = Arrangement.SpaceEvenly) {
+            Footer(user)
+         }
       }
-      Column(Modifier.bg(ColorPallet.TEXTP).weight(1f), verticalArrangement = Arrangement.SpaceEvenly) {
-         Footer(user)
-      }
+      layer()
    }
 }
