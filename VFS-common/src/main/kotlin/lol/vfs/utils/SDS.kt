@@ -1,6 +1,11 @@
 package lol.vfs.utils
 //SDS
 import lol.vfs.db.*
+import lol.vfs.db.organizational.Class
+import lol.vfs.db.organizational.Grade
+import lol.vfs.db.testing.TestResult
+import lol.vfs.db.testing.TreatmentData
+import lol.vfs.db.users.Student
 
 /**
  * Sample data set
@@ -93,16 +98,16 @@ fun generateIdNumbers(count: Int): List<Long> {
 }
 
 fun randBoolean() = arrayOf(false, true).random()
-fun randResult() = arrayOf(null, "Hello result").random()
+fun randResult() = arrayOf(null, "result").random()
 
 val students = mutableListOf<Student>().apply {
    for (id in generateIdNumbers(300)) {
       add(Student(id.toString(), ffirst(), rlast(), mutableMapOf<String, TestResult>().apply {
          this["killing"] = TestResult(randBoolean(), randResult())
-         this["kissing"] = TestResult(randBoolean(), randResult())
-      }, mutableMapOf<String, Boolean>().apply {
-         this["Really"] = randBoolean()
-         this["Wow"] = randBoolean()
+         this["yays"] = TestResult(randBoolean(), randResult())
+      }, mutableMapOf<String, TreatmentData>().apply {
+         this["Really"] = TreatmentData(randBoolean(), randResult())
+         this["Wow"] = TreatmentData(randBoolean(), randResult())
       }))
    }
 }.toList()

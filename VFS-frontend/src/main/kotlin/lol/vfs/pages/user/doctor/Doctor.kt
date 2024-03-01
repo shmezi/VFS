@@ -1,24 +1,28 @@
-package lol.vfs.pages.user
+package lol.vfs.pages.user.doctor
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import lol.vfs.assets.ColorPallet
 import lol.vfs.assets.ColorPallet.Companion.bg
-import lol.vfs.db.Class
-import lol.vfs.db.Student
-import lol.vfs.db.UserType
+import lol.vfs.assets.Status
+import lol.vfs.db.organizational.Class
+import lol.vfs.db.users.Student
+import lol.vfs.db.users.UserType
+import lol.vfs.extensions.status
 import lol.vfs.extensions.w
 import lol.vfs.pages.components.button.ButtonSwitch
 import lol.vfs.pages.components.layout.PageLayout
 import lol.vfs.pages.components.panel.*
+import lol.vfs.pages.components.table.Row
+import lol.vfs.pages.components.table.TTable
 import lol.vfs.requests.UserRequest
 import lol.vfs.utils.grades
 import lol.vfs.utils.studentClass
@@ -42,11 +46,16 @@ object Doctor : Screen {
                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                grades.forEach { g ->
-                  GradePanel(g) { grade, selected ->
+                  GradePanel(g, showStatus = false) { grade, selected ->
                      if (selected) classes.addAll(grade.classes)
                      else {
-                        grade.classes.forEach { students.removeAll(it.students) }
+                        grade.classes.forEach { clazz ->
+                           if (clazz.students.firstOrNull { it == student } != null)
+                              student = null
+                           students.removeAll(clazz.students)
+                        }
                         classes.removeAll(grade.classes)
+
                      }
 
 
@@ -59,21 +68,25 @@ object Doctor : Screen {
                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                classes.forEach {
-                  ClassPanel(it) { clazz, selected ->
+                  ClassPanel(it, showStatus = false) { clazz, selected ->
                      if (selected) students.addAll(clazz.students)
-                     else students.removeAll(clazz.students)
+                     else {
+                        students.removeAll(clazz.students)
+                        if (clazz.students.firstOrNull { it == student } != null)
+                           student = null
+                     }
 
                   }
                }
             }
             //Student panels
             Column(
-               Modifier.weight(1.5f).verticalScroll(rememberScrollState()),
+               Modifier.weight(1f).verticalScroll(rememberScrollState()),
                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                students.forEach {
                   StudentPanel(
-                     studentGrade[it]!!, studentClass[it]!!, it, student
+                     studentGrade[it]!!, studentClass[it]!!, it, student, showStatus = false
                   ) { a ->
                      student = a
                   }
@@ -81,7 +94,7 @@ object Doctor : Screen {
             }
             //Student info panel
             Column(Modifier.weight(2f).fillMaxHeight(), horizontalAlignment = Alignment.End) {
-               student ?: return@Column
+               val student = student ?: return@Column
                StudentInfoPanel(student)
                var state by remember { mutableStateOf(false) }
 
@@ -91,7 +104,16 @@ object Doctor : Screen {
                   }
                   5.w()
                }
-               AdminTablePanel(student, state)
+               val mapping: SnapshotStateMap<String, Status> =
+                  if (!state) mutableStateMapOf(*student.tests.map { Pair(it.key, it.value.status()) }.toTypedArray())
+                  else mutableStateMapOf(*student.treatments.map { Pair(it.key, it.value.status()) }.toTypedArray())
+               TTable(
+                  Row({ Text("סטטוס") }, { Text("שם טיפול") }),
+                  hModifier = Modifier.height(40.dp),
+                  rModifier = Modifier.height(30.dp),
+                  gModifier = Modifier.padding(5.dp),
+                  rows = mapping.map { Row({ it.value.i() }, { Text(it.key) }) }.toTypedArray()
+               )
             }
 
          }

@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import lol.vfs.assets.ColorPallet
-import lol.vfs.db.Class
-import lol.vfs.db.Grade
-import lol.vfs.db.Student
+import lol.vfs.db.organizational.Class
+import lol.vfs.db.organizational.Grade
+import lol.vfs.db.users.Student
 import lol.vfs.extensions.*
 
 @Composable
@@ -24,6 +24,7 @@ fun StudentPanel(
    clazz: Class,
    student: Student,
    selected: Student?,
+   showStatus: Boolean = false,
    onClick: (student: Student) -> Unit
 ) {
    Row(
@@ -46,11 +47,12 @@ fun StudentPanel(
       ) {
          Text("${clazz.id}/${grade.id}")
          3.h()
-         Row {
-            student.approved().i()
-            3.w()
-            student.doneTests().i()
-         }
+         if (showStatus)
+            Row {
+               student.testStatus().i()
+               3.w()
+               student.treatmentStatus().i()
+            }
       }
       Column(Modifier.weight(7f), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.End) {
          Text("${student.name} ${student.lastName}", fontSize = 30.sp(), fontWeight = FontWeight.Bold)

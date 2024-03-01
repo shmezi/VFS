@@ -1,4 +1,4 @@
-package lol.vfs.db
+package lol.vfs.db.organizational
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

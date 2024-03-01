@@ -12,7 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import lol.vfs.assets.Status
 import lol.vfs.assets.Status.*
-import lol.vfs.db.UserType
+import lol.vfs.db.users.UserType
 import lol.vfs.extensions.i
 import lol.vfs.extensions.w
 import lol.vfs.requests.UserRequest

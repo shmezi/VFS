@@ -8,7 +8,7 @@ import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
-import lol.vfs.db.Class
+import lol.vfs.db.organizational.Class
 import lol.vfs.requests.UserRequest
 
 val client = HttpClient(CIO) {

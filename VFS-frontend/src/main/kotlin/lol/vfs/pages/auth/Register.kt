@@ -16,7 +16,7 @@ import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import lol.vfs.client
 import lol.vfs.url
-import lol.vfs.db.UserType
+import lol.vfs.db.users.UserType
 import lol.vfs.requests.RegisterRequest
 
 object Register : Screen {

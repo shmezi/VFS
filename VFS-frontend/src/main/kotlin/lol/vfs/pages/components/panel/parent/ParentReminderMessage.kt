@@ -1,4 +1,4 @@
-package lol.vfs.pages.components.panel
+package lol.vfs.pages.components.panel.parent
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button

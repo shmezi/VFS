@@ -20,9 +20,10 @@ import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import lol.vfs.assets.ColorPallet
 import lol.vfs.client
+import lol.vfs.db.users.UserType
 import lol.vfs.getUser
 import lol.vfs.pages.user.Admin
-import lol.vfs.pages.user.Parent
+import lol.vfs.pages.user.parent.Parent
 import lol.vfs.requests.LoginRequest
 import lol.vfs.url
 
@@ -65,9 +66,9 @@ object Login : Screen {
 
                      navigator.push(
                         when (getUser().type) {
-                           lol.vfs.db.UserType.ADMIN -> Admin
-                           lol.vfs.db.UserType.PARENT -> Parent
-                           lol.vfs.db.UserType.DOCTOR -> TODO()
+                           UserType.ADMIN -> Admin
+                           UserType.PARENT -> Parent
+                           UserType.DOCTOR -> TODO()
                         }
                      )
                      return@runBlocking

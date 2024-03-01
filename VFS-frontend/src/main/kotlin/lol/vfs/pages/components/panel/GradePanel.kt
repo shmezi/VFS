@@ -1,13 +1,13 @@
 package lol.vfs.pages.components.panel
 
 import androidx.compose.runtime.Composable
-import lol.vfs.db.Grade
-import lol.vfs.extensions.approved
-import lol.vfs.extensions.doneTests
+import lol.vfs.db.organizational.Grade
+import lol.vfs.extensions.treatmentStatus
+import lol.vfs.extensions.testStatus
 
 @Composable
-fun GradePanel(grade: Grade, onClick: (grade: Grade, selected: Boolean) -> Unit) {
-   StatusPanel(grade.prettyPrint, grade.doneTests(), grade.approved()) {
+fun GradePanel(grade: Grade, showStatus: Boolean = true, onClick: (grade: Grade, selected: Boolean) -> Unit) {
+   StatusPanel(grade.prettyPrint, grade.testStatus(), grade.treatmentStatus(), showStatus = showStatus) {
       onClick(grade, it)
    }
 }

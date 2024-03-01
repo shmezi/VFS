@@ -1,10 +1,10 @@
-package lol.vfs.db
+package lol.vfs.db.users
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import lol.vfs.requests.UserRequest
 
-/**
+/** TODO: Rewrite docs
  * Represents a user that can log in to the system
  * This data is used both inside the browser as a cookie.
  * @param id User's personal national ID

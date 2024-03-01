@@ -3,8 +3,14 @@ package lol.vfs
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import kotlinx.coroutines.flow.firstOrNull
-import lol.vfs.db.UserType
+import lol.vfs.db.users.UserType
 import lol.vfs.db.*
+import lol.vfs.db.organizational.Class
+import lol.vfs.db.testing.Medical
+import lol.vfs.db.users.Parent
+import lol.vfs.db.users.Student
+import lol.vfs.db.users.Teacher
+import lol.vfs.db.users.User
 import lol.vfs.minilib.pq
 import lol.vfs.utils.randomString
 import org.mindrot.jbcrypt.BCrypt
@@ -17,7 +23,7 @@ object Database {
    private val teacherDb = mongo.getCollection<Teacher>("teachers")
    private val parentDb = mongo.getCollection<Parent>("parents")
    private val studentDb = mongo.getCollection<Student>("students")
-   private val testDb = mongo.getCollection<MedTest>("tests")
+   private val testDb = mongo.getCollection<Medical>("tests")
 
 
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::://

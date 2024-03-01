@@ -1,47 +1,46 @@
 package lol.vfs.extensions
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.material.Checkbox
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import lol.vfs.assets.Status
 import lol.vfs.db.*
+import lol.vfs.db.organizational.Class
+import lol.vfs.db.organizational.Grade
+import lol.vfs.db.testing.TestResult
+import lol.vfs.db.testing.TreatmentData
+import lol.vfs.db.users.Student
+import lol.vfs.db.users.UserType
+import lol.vfs.pages.components.table.Row
 
 
-fun List<Boolean>.bstatus(): Status {
-   if (this.isEmpty()) return Status.APPROVED
-   var status = Status.DENIED
-   for (test in this) {
-      if (status == Status.DENIED && test) {
-         status = Status.PARTIAL
-         continue
-      }
-      if (status == Status.PARTIAL && !test)
-         return Status.PARTIAL
-   }
-   if (status != Status.DENIED)
-      return Status.APPROVED
-   return status
-}
-
-
-fun List<Status>.sstatus(): Status {
-   if (this.isEmpty()) return Status.APPROVED
+fun List<Status>.status(): Status {
+   if (isEmpty()) return Status.APPROVED
+   if (!contains(Status.PARTIAL) && !contains(Status.DENIED) && !contains(Status.APPROVED)) return Status.DONE
    if (!contains(Status.DENIED) && !contains(Status.PARTIAL)) return Status.APPROVED
-   if (!contains(Status.PARTIAL) && !contains(Status.APPROVED)) return Status.DENIED
+   if (!contains(Status.PARTIAL) && !contains(Status.APPROVED) && !contains(Status.DONE)) return Status.DENIED
    return Status.PARTIAL
 }
 
 fun TestResult.status(): Status {
    return when {
       !approved -> Status.DENIED
-      approved && result == null -> Status.APPROVED
-      else -> Status.DONE
+      isComplete() -> Status.DONE
+      else -> Status.APPROVED
+   }
+}
+
+fun TreatmentData.status(): Status {
+   return when {
+      !approved -> Status.DENIED
+      isComplete() -> Status.DONE
+      else -> Status.APPROVED
    }
 }
 
@@ -52,15 +51,59 @@ fun StudyData.r() = painterResource("assets/learning/$image")
 fun StudyData.i(modifier: Modifier = Modifier) =
    Image(r(), description, contentScale = ContentScale.FillBounds, modifier = modifier)
 
-fun Student.approved() = medicalTests.values.map { it.approved }.bstatus()
+//Student extensions
+fun Student.treatmentStatus() = treatments.values.map { it.status() }.status()
+fun Student.testStatus() = tests.values.map { it.status() }.status()
 
-fun Class.approved() = this.students.map { it.approved() }.sstatus()
+fun Student.medsAsStatusRows(): List<Row> {
+   val rows = mutableListOf<Row>()
+   for (t in treatments) {
+      rows.add(
+         Row({ t.value.status().i() }, { Text(t.key) }, { Text(name) })
+      )
+   }
+   for (t in tests) {
+      rows.add(
+         Row({ t.value.status().i() }, { Text(t.key) }, { Text(name) })
+      )
+   }
+   return rows
+}
 
-fun Grade.approved() = this.classes.map { it.approved() }.sstatus()
+fun Student.medsAsParentRows(): List<Row> {
+   val rows = mutableListOf<Row>()
+   for (t in treatments) {
+      rows.add(
+         Row({
+            var checked by remember { mutableStateOf(t.value.approved) }
+            Checkbox(checked, {
+               checked = !checked
+               //TOOD BACKEND HOOK
+            })
+         }, { Text(t.key) }, { Text(name) })
+      )
+   }
+   for (t in tests) {
+      rows.add(
+         Row({
+            var checked by remember { mutableStateOf(t.value.approved) }
+            Checkbox(checked, {
+               checked = !checked
+               //TOOD BACKEND HOOK
+            })
+         }, { Text(t.key) }, { Text(name) })
+      )
+   }
+   return rows
+}
+//Class extensions
 
-fun Student.doneTests() = medicalTests.values.map { it.result != null }.bstatus()
-fun Class.doneTests() = this.students.map { it.doneTests() }.sstatus()
-fun Grade.doneTests() = this.classes.map { it.doneTests() }.sstatus()
+fun Class.testStatus() = students.map { it.testStatus() }.status()
+fun Class.treatmentStatus() = students.map { it.treatmentStatus() }.status()
+//Grade extensions
+
+fun Grade.testStatus() = classes.map { it.testStatus() }.status()
+fun Grade.treatmentStatus() = classes.map { it.treatmentStatus() }.status()
 
 
 @Composable

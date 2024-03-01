@@ -1,4 +1,4 @@
-package lol.vfs.db
+package lol.vfs.db.users
 
 import kotlinx.serialization.Serializable
 

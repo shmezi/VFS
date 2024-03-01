@@ -1,12 +1,10 @@
-package lol.vfs.pages.user
+package lol.vfs.pages.user.parent
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.Text
-import androidx.compose.material.darkColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,15 +18,19 @@ import androidx.compose.ui.window.Dialog
 import cafe.adriel.voyager.core.screen.Screen
 import lol.vfs.assets.NavIcon
 import lol.vfs.assets.Status
-import lol.vfs.db.Student
-import lol.vfs.db.UserType
-import lol.vfs.extensions.approved
+import lol.vfs.db.users.Student
+import lol.vfs.db.users.UserType
+import lol.vfs.extensions.medsAsParentRows
+import lol.vfs.extensions.medsAsStatusRows
+import lol.vfs.extensions.treatmentStatus
+import lol.vfs.pages.components.button.ButtonSwitch
 import lol.vfs.pages.components.layout.NavBar
 import lol.vfs.pages.components.layout.PageLayout
-import lol.vfs.pages.components.panel.LearningPanel
-import lol.vfs.pages.components.panel.ParentReminderMessage
-import lol.vfs.pages.components.panel.ParentTablePanel
 import lol.vfs.pages.components.panel.StudentPanel
+import lol.vfs.pages.components.panel.parent.LearningPanel
+import lol.vfs.pages.components.panel.parent.ParentReminderMessage
+import lol.vfs.pages.components.table.Row
+import lol.vfs.pages.components.table.TTable
 import lol.vfs.requests.UserRequest
 import lol.vfs.utils.grades
 import lol.vfs.utils.studentClass
@@ -40,6 +42,7 @@ object Parent : Screen {
    @Composable
    override fun Content() {
       var kid by remember { mutableStateOf<Student?>(null) }
+      val kids = remember { mutableStateListOf(*grades[0].classes.first().students.toTypedArray()) }
       var dialog by remember { mutableStateOf(false) }
       PageLayout(UserRequest("337616346", "עזרא", "גולומבק", UserType.PARENT), {
          if (dialog) {
@@ -89,14 +92,23 @@ object Parent : Screen {
             when (page) {
                NavIcon.HOME -> {
                   Column(modifier = Modifier.weight(4f)) {
+                     var state by remember { mutableStateOf(false) }
+                     ButtonSwitch {
+                        state = it
+                     }
 
                   }
                   Column(modifier = Modifier.weight(3f)) {
                      kid ?: return@Column
-                     ParentReminderMessage(kid?.approved() == Status.APPROVED) {
+                     ParentReminderMessage(kid?.treatmentStatus() == Status.APPROVED) {
                         dialog = !dialog
                      }
-                     ParentTablePanel(kid ?: return@Column)
+                     TTable(
+                        Row({ Text("אישור") }, { Text("שם") }, { Text("סוג") }),
+                        hModifier = Modifier.height(40.dp),
+                        rModifier = Modifier.height(30.dp),
+                        rows = kid?.medsAsParentRows()?.toTypedArray() ?: arrayOf()
+                     )
                   }
                   Column(
                      modifier = Modifier.weight(2f),
@@ -104,7 +116,7 @@ object Parent : Screen {
                   ) {
                      Text("ילדים", fontSize = 30.sp)
                      Column(Modifier.fillMaxSize().weight(3f).verticalScroll(rememberScrollState())) {
-                        grades[0].classes.first().students.forEach {
+                        kids.forEach {
                            StudentPanel(studentGrade[it]!!, studentClass[it]!!, it, kid) { s ->
                               kid = s
                            }
@@ -117,7 +129,7 @@ object Parent : Screen {
                NavIcon.EDU -> {
                   Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(0.9f)) {
                      Text("מרכז למידה", fontSize = 50.sp)
-                     Row(Modifier.horizontalScroll(rememberScrollState()).background(Color.Magenta)) {
+                     Row(Modifier.horizontalScroll(rememberScrollState(50))) {
                         studyDataList.forEach {
                            LearningPanel(it) {
 
@@ -129,6 +141,23 @@ object Parent : Screen {
 
                NavIcon.SCHEDULE -> {
 
+                  Column(
+                     horizontalAlignment = Alignment.CenterHorizontally,
+                     modifier = Modifier.weight(0.9f)
+                  ) {
+                     Text("מועדי בדיקות וחיסונים", fontSize = 40.sp, textAlign = TextAlign.Center)
+                     val rows = mutableListOf<Row>()
+                     for (k in kids) {
+                        k.medsAsStatusRows()
+                     }
+                     TTable(
+                        Row({ Text("אושר") }, { Text("אירוע") }, { Text("ילד") }),
+                        Modifier.fillMaxSize(),
+                        hModifier = Modifier.height(40.dp),
+                        rModifier = Modifier.height(30.dp),
+                        rows = rows.toTypedArray()
+                     )
+                  }
                }
             }
 

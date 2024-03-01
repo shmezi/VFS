@@ -21,7 +21,8 @@ fun StatusPanel(
    test: Status,
    approved: Status,
    selected: Boolean = false,
-   selfControl :Boolean = true,
+   selfControl: Boolean = true,
+   showStatus: Boolean = true,
    onClick: (selected: Boolean) -> Unit
 ) {
    var selection by remember { mutableStateOf(selected) }
@@ -45,12 +46,12 @@ fun StatusPanel(
       horizontalArrangement = Arrangement.Center
 
    ) {
-
-      Row {
-         test.i()
-         3.w()
-         approved.i()
-      }
+      if (showStatus)
+         Row {
+            test.i()
+            3.w()
+            approved.i()
+         }
       10.w()
       Text(text)
 
