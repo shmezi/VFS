@@ -1,4 +1,4 @@
-package lol.vfs.pages.components.panel
+package lol.vfs.pages.components.tile
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -16,7 +16,7 @@ import lol.vfs.assets.Status
 import lol.vfs.extensions.w
 
 @Composable
-fun StatusPanel(
+fun StatusTile(
    text: String,
    test: Status,
    approved: Status,

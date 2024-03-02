@@ -1,4 +1,4 @@
-package lol.vfs.pages.components.panel
+package lol.vfs.pages.components.tile
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -19,12 +19,12 @@ import lol.vfs.db.users.Student
 import lol.vfs.extensions.*
 
 @Composable
-fun StudentPanel(
+fun StudentTile(
    grade: Grade,
    clazz: Class,
    student: Student,
    selected: Student?,
-   showStatus: Boolean = false,
+   showStatus: Boolean = true,
    onClick: (student: Student) -> Unit
 ) {
    Row(

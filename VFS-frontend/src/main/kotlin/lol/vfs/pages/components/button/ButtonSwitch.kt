@@ -21,7 +21,7 @@ import lol.vfs.extensions.w
 
 @Composable
 fun ButtonSwitch(onClick: (Boolean) -> Unit) {
-   var state by remember { mutableStateOf(false) }
+   var state by remember { mutableStateOf(true) }
    Row {
       OutlinedButton(
          onClick = {

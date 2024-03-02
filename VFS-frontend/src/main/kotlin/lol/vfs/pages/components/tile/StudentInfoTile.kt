@@ -1,4 +1,4 @@
-package lol.vfs.pages.components.panel
+package lol.vfs.pages.components.tile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
