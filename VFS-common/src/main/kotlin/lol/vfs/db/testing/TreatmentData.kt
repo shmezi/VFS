@@ -1,6 +1,7 @@
 package lol.vfs.db.testing
 
 import kotlinx.serialization.Serializable
+import lol.vfs.minilib.Date
 
 /**
  * A treatment result of a student
@@ -10,7 +11,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TreatmentData(
    var approved: Boolean = false,
-   var afterEffects: String? = null
+   var afterEffects: String? = null,
+   var date: Date? = null
 ) {
    /**
     * Weather the treatment has been done on the kid or not

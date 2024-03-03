@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import cafe.adriel.voyager.core.screen.Screen
-import lol.vfs.pages.components.table.TRow
-import lol.vfs.pages.components.table.TTable
+import lol.vfs.pages.components.layout.table.TRow
+import lol.vfs.pages.components.layout.table.TTable
 
 object User : Screen {
    @Composable

@@ -6,6 +6,7 @@ import lol.vfs.db.organizational.Grade
 import lol.vfs.db.testing.TestResult
 import lol.vfs.db.testing.TreatmentData
 import lol.vfs.db.users.Student
+import lol.vfs.minilib.Date
 
 /**
  * Sample data set
@@ -103,11 +104,11 @@ fun randResult() = arrayOf(null, "result").random()
 val students = mutableListOf<Student>().apply {
    for (id in generateIdNumbers(300)) {
       add(Student(id.toString(), ffirst(), rlast(), mutableMapOf<String, TestResult>().apply {
-         this["killing"] = TestResult(randBoolean(), randResult())
-         this["yays"] = TestResult(randBoolean(), randResult())
+         this["killing"] = TestResult(randBoolean(), randResult(), date = Date(2006, 2, 2))
+         this["yays"] = TestResult(randBoolean(), randResult(), date = Date(2006, 2, 2))
       }, mutableMapOf<String, TreatmentData>().apply {
-         this["Really"] = TreatmentData(randBoolean(), randResult())
-         this["Wow"] = TreatmentData(randBoolean(), randResult())
+         this["Really"] = TreatmentData(randBoolean(), randResult(), Date(2006, 2, 2))
+         this["Wow"] = TreatmentData(randBoolean(), randResult(), Date(2006, 2, 2))
       }))
    }
 }.toList()

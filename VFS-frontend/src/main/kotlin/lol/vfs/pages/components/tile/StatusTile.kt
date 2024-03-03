@@ -26,33 +26,28 @@ fun StatusTile(
    onClick: (selected: Boolean) -> Unit
 ) {
    var selection by remember { mutableStateOf(selected) }
-   Row(
-      Modifier
-         .padding(2.dp)
-         .background(
-            if (if (selfControl) selection else selected) Color.Red else ColorPallet.BACKGROUNDS.c
-         )
-         .fillMaxWidth()
-         .height(40.dp)
-         .clickable {
+   Row(Modifier.padding(2.dp).background(
+         if (if (selfControl) selection else selected) Color.Red else ColorPallet.BACKGROUNDS.c
+      ).fillMaxWidth().height(40.dp).clickable {
 
-            selection = !selection
-            onClick(selection)
+         selection = !selection
+         onClick(selection)
 
-         }
+      }
 
-         .border(BorderStroke(1.dp, Color.Black)),
+      .border(BorderStroke(1.dp, Color.Black)),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Center
 
    ) {
-      if (showStatus)
+      if (showStatus) {
          Row {
             test.i()
             3.w()
             approved.i()
          }
-      10.w()
+         10.w()
+      }
       Text(text)
 
    }

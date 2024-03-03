@@ -21,7 +21,7 @@ fun RowScope.EducationPage() {
       Row(Modifier.horizontalScroll(rememberScrollState(50))) {
          studyDataList.forEach {
             LearningPanel(it) {
-
+               
             }
          }
       }

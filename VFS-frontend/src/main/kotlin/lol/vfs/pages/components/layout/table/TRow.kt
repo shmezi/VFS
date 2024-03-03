@@ -1,4 +1,4 @@
-package lol.vfs.pages.components.table
+package lol.vfs.pages.components.layout.table
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.dp
 class TRow(private vararg val cells: @Composable ColumnScope.() -> Unit) {
 
    constructor(
-      vararg cells: String
+      vararg cells: String?
    ) : this(
       *mutableListOf<@Composable ColumnScope.() -> Unit>().apply {
          cells.forEach {
             add {
-               Text(it)
+               Text(it ?: "")
             }
          }
       }.toTypedArray()
@@ -31,7 +31,7 @@ class TRow(private vararg val cells: @Composable ColumnScope.() -> Unit) {
    @Composable
    fun build(rModifier: Modifier = Modifier, cModifier: Modifier = Modifier) {
 
-      val cells = remember { mutableStateListOf(*cells) }
+
       Row(
          rModifier.fillMaxWidth(),
          verticalAlignment = Alignment.CenterVertically,

@@ -1,4 +1,4 @@
-package lol.vfs.pages.components.table
+package lol.vfs.pages.components.layout.table
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,6 @@ fun TTable(
    hModifier: Modifier = Modifier.height(30.dp),
    rModifier: Modifier = Modifier.height(20.dp),
 ) {
-
    Column(gModifier.background(Color.Gray).border(BorderStroke(2.dp, Color.Black))) {
       header.build(hModifier)//TODO cModifier ?
       Column(modifier = Modifier.verticalScroll(rememberScrollState())) {

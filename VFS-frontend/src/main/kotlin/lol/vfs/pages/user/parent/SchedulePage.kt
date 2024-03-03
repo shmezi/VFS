@@ -2,7 +2,6 @@ package lol.vfs.pages.user.parent
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,9 +12,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import lol.vfs.db.users.Student
-import lol.vfs.extensions.rowify
-import lol.vfs.pages.components.table.TRow
-import lol.vfs.pages.components.table.TTable
+import lol.vfs.extensions.rowifyApproval
+import lol.vfs.pages.components.layout.table.TRow
+import lol.vfs.pages.components.layout.table.TTable
 
 @Composable
 fun RowScope.SchedulePage(kids: SnapshotStateList<Student>) {
@@ -26,7 +25,7 @@ fun RowScope.SchedulePage(kids: SnapshotStateList<Student>) {
       Text("מועדי בדיקות וחיסונים", fontSize = 40.sp, textAlign = TextAlign.Center)
       val rows = mutableListOf<TRow>()
       kids.forEach {
-         rows.addAll(it.rowify(true))
+         rows.addAll(it.rowifyApproval(true))
       }
 
       TTable(

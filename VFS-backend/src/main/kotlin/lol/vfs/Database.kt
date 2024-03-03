@@ -168,8 +168,6 @@ object Database {
    suspend fun newToken(id: String?, pwd: String?): String? {
       id ?: return null
       pwd ?: return null
-      id.pq()
-      pwd.pq()
       val user = userDB.find(eq("_id", id)).firstOrNull().pq() ?: return null
       if (!checkPassword(user.pwd, pwd)) return null
 

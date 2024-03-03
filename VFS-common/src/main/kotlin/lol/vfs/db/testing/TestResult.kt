@@ -1,6 +1,7 @@
 package lol.vfs.db.testing
 
 import kotlinx.serialization.Serializable
+import lol.vfs.minilib.Date
 
 /**
  * A test result of a student
@@ -12,7 +13,8 @@ import kotlinx.serialization.Serializable
 data class TestResult(
    var approved: Boolean = false,
    var results: String? = null,
-   var recommendations: String? = null
+   var recommendations: String? = null,
+   var date: Date? = null
 ) {
    /**
     * Weather the test has been run on the kid or not

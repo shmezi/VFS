@@ -38,6 +38,7 @@ fun StudentTile(
          .fillMaxWidth()
          .border(BorderStroke(1.dp, Color.Black)),
       verticalAlignment = Alignment.Top,
+
    ) {
 
       Column(

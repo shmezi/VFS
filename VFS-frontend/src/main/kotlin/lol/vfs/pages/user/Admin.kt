@@ -1,13 +1,12 @@
 package lol.vfs.pages.user
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.coroutines.runBlocking
 import lol.vfs.assets.ColorPallet
@@ -20,6 +19,8 @@ import lol.vfs.getUser
 import lol.vfs.pages.components.button.ButtonSwitch
 import lol.vfs.pages.components.layout.PageLayout
 import lol.vfs.pages.components.panel.SelectionPanel
+import lol.vfs.pages.components.layout.table.TRow
+import lol.vfs.pages.components.layout.table.TTable
 import lol.vfs.pages.components.tile.StudentInfoPanel
 
 
@@ -51,16 +52,14 @@ object Admin : Screen {
                val mapping: SnapshotStateMap<String, Status> =
                   if (!state) mutableStateMapOf(*student.tests.map { Pair(it.key, it.value.status()) }.toTypedArray())
                   else mutableStateMapOf(*student.treatments.map { Pair(it.key, it.value.status()) }.toTypedArray())
-//
-//               TTable(
-//                  { Trow({ Text("סטטוס") }, { Text("שם טיפול") }) },
-//                  Modifier.padding(5.dp),
-//                  Modifier.height(40.dp),
-//                  Modifier.height(30.dp),
-//                  {
-//                     mapping.map { Trow({ it.value.i() }, { Text(it.key) }) }
-//                  }
-//               )
+
+               TTable(
+                  TRow("סטטוס", "שם טיפול"),
+                  *mapping.map { TRow({ it.value.i() }, { Text(it.key) }) }.toTypedArray(),
+                  gModifier = Modifier.padding(5.dp),
+                  hModifier = Modifier.height(40.dp),
+                  rModifier = Modifier.height(30.dp),
+               )
             }
 
          }

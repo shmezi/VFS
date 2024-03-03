@@ -18,6 +18,10 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import lol.vfs.extensions.w
 
+/**
+ * Vaccines - false
+ * Treatments - true
+ */
 
 @Composable
 fun ButtonSwitch(onClick: (Boolean) -> Unit) {

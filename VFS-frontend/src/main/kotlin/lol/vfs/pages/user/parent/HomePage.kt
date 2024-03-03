@@ -1,9 +1,6 @@
 package lol.vfs.pages.user.parent
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -16,13 +13,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import lol.vfs.assets.Status
 import lol.vfs.db.users.Student
-import lol.vfs.extensions.rowify
-import lol.vfs.extensions.treatmentStatus
+import lol.vfs.extensions.*
 import lol.vfs.minilib.pq
 import lol.vfs.pages.components.button.ButtonSwitch
 import lol.vfs.pages.components.panel.parent.ParentReminderMessage
-import lol.vfs.pages.components.table.TRow
-import lol.vfs.pages.components.table.TTable
+import lol.vfs.pages.components.layout.table.TRow
+import lol.vfs.pages.components.layout.table.TTable
 import lol.vfs.pages.components.tile.StudentTile
 import lol.vfs.utils.studentClass
 import lol.vfs.utils.studentGrade
@@ -34,23 +30,46 @@ fun RowScope.HomePage(kids: SnapshotStateList<Student>, kid: MutableState<Studen
 
 
    Column(modifier = Modifier.weight(4f)) {
-      var state by remember { mutableStateOf(false) }
-      ButtonSwitch {
-         state = it
+      kid ?: return@Column
+      var state by remember { mutableStateOf(true) }
+      Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+         Text("תיק רפואי", fontSize = 45.sp)
+      }
+      5.h()
+      Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
+         ButtonSwitch {
+            state = it
+
+         }
       }
 
+
+
+
+      Column {
+         TTable(
+            if (state)
+               TRow("המלצות רופא", "תאריך בדיקה", "שם")
+            else
+               TRow("המלצות רופא", "תוצאה", "תאריך קבלת החיסון", "שם"),
+            * (if (state) kid.rowifyTreatments() else kid.rowifyTests())
+         )
+      }
+
+
    }
+   5.w()
    Column(modifier = Modifier.weight(3f)) {
+      kid ?: return@Column
       ParentReminderMessage(kid?.treatmentStatus() == Status.APPROVED) {
          dialog = !dialog
       }
       TTable(
-         TRow("אישור", "שם", "סוג"),
-         *kid.rowify(false),
+         TRow("אישור", "סוג", "שם"),
+         *kid.rowifyApproval(false),
          hModifier = Modifier.height(40.dp),
          rModifier = Modifier.height(30.dp),
-
-         )
+      )
    }
    Column(
       modifier = Modifier.weight(2f),
