@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import lol.vfs.db.StudyData
+import lol.vfs.model.StudyData
 import lol.vfs.extensions.h
 import lol.vfs.extensions.i
 

@@ -1,7 +1,7 @@
 package lol.vfs.requests
 
 import kotlinx.serialization.Serializable
-import lol.vfs.db.users.UserType
+import lol.vfs.model.users.UserType
 
 @Serializable
 data class RegisterRequest(
@@ -9,6 +9,6 @@ data class RegisterRequest(
    val name: String,
    val lastName: String,
    val image: String,
-   val type: Set<UserType>,
+   val type: UserType,
    val password: String
 )

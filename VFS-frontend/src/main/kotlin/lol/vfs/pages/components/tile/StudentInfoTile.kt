@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import lol.vfs.db.users.Student
+import lol.vfs.model.users.Student
 import lol.vfs.utils.studentClass
 import lol.vfs.utils.studentGrade
 

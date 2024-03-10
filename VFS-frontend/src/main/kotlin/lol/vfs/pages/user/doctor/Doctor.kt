@@ -12,15 +12,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.coroutines.runBlocking
 import lol.vfs.assets.ColorPallet
 import lol.vfs.assets.ColorPallet.Companion.bg
-import lol.vfs.assets.Status
-import lol.vfs.db.users.Student
+import lol.vfs.model.users.Student
 import lol.vfs.extensions.*
 import lol.vfs.getUser
 import lol.vfs.pages.components.button.ButtonSwitch
 import lol.vfs.pages.components.layout.PageLayout
 import lol.vfs.pages.components.layout.Switch
 import lol.vfs.pages.components.panel.SelectionPanel
-import lol.vfs.pages.components.panel.parent.ParentReminderMessage
 import lol.vfs.pages.components.layout.table.TRow
 import lol.vfs.pages.components.layout.table.TTable
 import lol.vfs.pages.components.tile.StudentInfoPanel

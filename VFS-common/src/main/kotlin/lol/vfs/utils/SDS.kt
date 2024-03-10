@@ -1,11 +1,11 @@
 package lol.vfs.utils
 //SDS
-import lol.vfs.db.*
-import lol.vfs.db.organizational.Class
-import lol.vfs.db.organizational.Grade
-import lol.vfs.db.testing.TestResult
-import lol.vfs.db.testing.TreatmentData
-import lol.vfs.db.users.Student
+import lol.vfs.model.*
+import lol.vfs.model.organizational.Class
+import lol.vfs.model.organizational.Grade
+import lol.vfs.model.testing.TestResult
+import lol.vfs.model.testing.TreatmentData
+import lol.vfs.model.users.Student
 import lol.vfs.minilib.Date
 
 /**

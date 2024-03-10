@@ -5,10 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Modifier
-import lol.vfs.db.organizational.Class
-import lol.vfs.db.users.Student
+import lol.vfs.model.organizational.Class
+import lol.vfs.model.users.Student
 import lol.vfs.extensions.DColumn
 
 @Composable

@@ -1,4 +1,4 @@
-package lol.vfs
+package lol.vfs.user.auth
 
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -7,6 +7,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import lol.vfs.struct.Database
 import lol.vfs.requests.LoginRequest
 import lol.vfs.requests.RegisterRequest
 
@@ -41,7 +42,7 @@ fun Application.authRouting() {
                user.lastName,
                user.image,
                user.password,
-               *user.type.toTypedArray()
+               user.type
             )
 
          }

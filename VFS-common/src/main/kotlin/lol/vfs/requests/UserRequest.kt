@@ -1,7 +1,7 @@
 package lol.vfs.requests
 
 import kotlinx.serialization.Serializable
-import lol.vfs.db.users.UserType
+import lol.vfs.model.users.UserType
 
 @Serializable
 data class UserRequest(

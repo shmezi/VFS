@@ -1,9 +1,9 @@
-package lol.vfs.db.users
+package lol.vfs.model.users
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import lol.vfs.db.testing.TestResult
-import lol.vfs.db.testing.TreatmentData
+import lol.vfs.model.testing.TestResult
+import lol.vfs.model.testing.TreatmentData
 
 /**
  * Represents a student at the school

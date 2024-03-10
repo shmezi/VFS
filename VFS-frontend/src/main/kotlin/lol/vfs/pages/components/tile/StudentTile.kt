@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import lol.vfs.assets.ColorPallet
-import lol.vfs.db.organizational.Class
-import lol.vfs.db.organizational.Grade
-import lol.vfs.db.users.Student
+import lol.vfs.model.organizational.Class
+import lol.vfs.model.organizational.Grade
+import lol.vfs.model.users.Student
 import lol.vfs.extensions.*
 
 @Composable

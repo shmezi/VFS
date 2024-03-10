@@ -1,25 +1,28 @@
-package lol.vfs
+package lol.vfs.struct
 
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import kotlinx.coroutines.flow.firstOrNull
-import lol.vfs.db.users.UserType
-import lol.vfs.db.*
-import lol.vfs.db.organizational.Class
-import lol.vfs.db.testing.Medical
-import lol.vfs.db.users.Parent
-import lol.vfs.db.users.Student
-import lol.vfs.db.users.Teacher
-import lol.vfs.db.users.User
+import kotlinx.coroutines.runBlocking
 import lol.vfs.minilib.pq
+import lol.vfs.model.*
+import lol.vfs.model.organizational.Class
+import lol.vfs.model.organizational.Grade
+import lol.vfs.model.testing.Medical
+import lol.vfs.model.users.*
+import lol.vfs.user.auth.LoginSession
 import lol.vfs.utils.randomString
 import org.mindrot.jbcrypt.BCrypt
 
 
 object Database {
    private val mongo = MongoClient.create("mongodb://localhost:27017").getDatabase("VFS")
+
+
    private val userDB = mongo.getCollection<User>("users")
    private val classDB = mongo.getCollection<Class>("classes")
+   private val gradeDB = mongo.getCollection<Grade>("grades")
+
    private val teacherDb = mongo.getCollection<Teacher>("teachers")
    private val parentDb = mongo.getCollection<Parent>("parents")
    private val studentDb = mongo.getCollection<Student>("students")
@@ -30,13 +33,24 @@ object Database {
 //                     Class Database                     //
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 
+   fun <T> multiApply(collection: Collection<String>, func: (String) -> T) =
+      collection.map { func(it) }.filterNotNull().toMutableSet()
+
+   suspend fun getGrade(classId: String) = gradeDB.find(eq("_id", classId)).firstOrNull()
    suspend fun getClass(classId: String) = classDB.find(eq("_id", classId)).firstOrNull()
+
+   suspend fun getClasses(collection: Collection<String>) = multiApply(collection) { runBlocking { getClass(it) } }
+
+
    suspend fun getParent(parentId: String) = parentDb.find(eq("_id", parentId)).firstOrNull()
    suspend fun getStudent(studentId: String) = studentDb.find(eq("_id", studentId)).firstOrNull()
+   suspend fun getStudents(collection: Collection<String>) = multiApply(collection) { runBlocking { getStudent(it) } }
+
 
    suspend fun getTeacher(teacherId: String) = teacherDb.find(eq("_id", teacherId)).firstOrNull()
 
    suspend fun getTest(testId: String) = testDb.find(eq("_id", testId)).firstOrNull()
+   suspend fun getTreatment(testId: String) = testDb.find(eq("_id", testId)).firstOrNull()
 
 
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::://
@@ -133,7 +147,9 @@ object Database {
       when (role) {
          UserType.ADMIN -> teacherDb.insertOne(Teacher(id, mutableSetOf()))
          UserType.PARENT -> parentDb.insertOne(Parent(id, mutableSetOf()))
-         UserType.DOCTOR -> TODO()
+         else -> {
+
+         }
 
       }
 

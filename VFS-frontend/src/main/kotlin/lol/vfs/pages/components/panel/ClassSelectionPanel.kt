@@ -3,8 +3,8 @@ package lol.vfs.pages.components.panel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import lol.vfs.db.organizational.Class
-import lol.vfs.db.users.Student
+import lol.vfs.model.organizational.Class
+import lol.vfs.model.users.Student
 import lol.vfs.pages.components.tile.ClassTile
 
 @Composable

@@ -8,8 +8,7 @@ import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
-import lol.vfs.db.organizational.Class
-import lol.vfs.db.users.UserType
+import lol.vfs.model.organizational.Class
 import lol.vfs.requests.UserRequest
 
 val client = HttpClient(CIO) {
@@ -22,11 +21,10 @@ val client = HttpClient(CIO) {
 const val urlStem = "http://localhost:8080"
 fun String.url() = "$urlStem/$this"
 
-suspend fun getUser(): UserRequest = UserRequest("337616346", "עזרא", "גולומבק", UserType.DOCTOR)
-//{
-//   val user = client.get("user".url()).body<UserRequest>()
-//   return user
-//}
+suspend fun getUser() : UserRequest{
+   val user = client.get("user".url()).body<UserRequest>()
+   return user
+}
 
 
 fun getClasses(): Set<Class> {

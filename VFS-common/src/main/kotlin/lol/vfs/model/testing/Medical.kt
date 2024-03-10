@@ -1,4 +1,4 @@
-package lol.vfs.db.testing
+package lol.vfs.model.testing
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -12,5 +12,7 @@ import kotlinx.serialization.Serializable
 data class Medical(
    @SerialName("_id")
    val name: String,
-   val description: String
-)
+   val description: String,
+) {
+   // TODO TODO: make this include the type it is.
+}

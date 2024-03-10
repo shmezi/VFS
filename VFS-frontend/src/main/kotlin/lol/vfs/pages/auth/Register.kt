@@ -11,17 +11,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import lol.vfs.client
 import lol.vfs.url
-import lol.vfs.db.users.UserType
+import lol.vfs.model.users.UserType
+import lol.vfs.minilib.pq
 import lol.vfs.requests.RegisterRequest
 
 object Register : Screen {
    @Composable
    override fun Content() {
+      val navigator = LocalNavigator.currentOrThrow
+
       var name by remember { mutableStateOf("") }
       var last by remember { mutableStateOf("") }
       var id by remember { mutableStateOf("") }
@@ -67,7 +72,7 @@ object Register : Screen {
             IconButton({ expanded = true }) {
                Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                   Text("${selection?.prettyPrint ?: "Select type"} ")
-                  Icon(painterResource("arrow.png"), "arrow", Modifier.size(10.dp))
+                  Icon(painterResource("assets/arrow.png"), "arrow", Modifier.size(10.dp))
                }
             }
             DropdownMenu(expanded = expanded, {
@@ -87,9 +92,14 @@ object Register : Screen {
             runBlocking {
                client.post("auth/register".url()) {
                   contentType(ContentType.Application.Json)
-                  setBody(RegisterRequest(id, name, last, "na", setOf(selection ?: return@runBlocking), password))
+                  setBody(
+                     RegisterRequest(
+                        id, name, last, "na", selection.pq("SELECTION") ?: return@runBlocking, password
+                     )
+                  )
                }
             }
+            navigator.push(Login)
 
 
          }) {

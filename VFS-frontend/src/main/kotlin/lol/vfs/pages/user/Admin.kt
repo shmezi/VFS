@@ -12,7 +12,7 @@ import kotlinx.coroutines.runBlocking
 import lol.vfs.assets.ColorPallet
 import lol.vfs.assets.ColorPallet.Companion.bg
 import lol.vfs.assets.Status
-import lol.vfs.db.users.Student
+import lol.vfs.model.users.Student
 import lol.vfs.extensions.status
 import lol.vfs.extensions.w
 import lol.vfs.getUser

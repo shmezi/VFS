@@ -20,7 +20,7 @@ Authentication endpoints:
 
 | Name    | Type | Data                                                      | Description |
 |---------|------|-----------------------------------------------------------|-------------|
-| Classes | GET  | [RegisterRequest](VFS-common/src/main/kotlin/lol/vfs/db/) |             |
+| Classes | GET  | [RegisterRequest](VFS-common/src/main/kotlin/lol/vfs/model/) |             |
 
 ```
 

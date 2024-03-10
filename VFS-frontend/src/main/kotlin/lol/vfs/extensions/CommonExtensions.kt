@@ -10,21 +10,18 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import lol.vfs.assets.Status
 import lol.vfs.assets.Status.Companion.status
-import lol.vfs.db.StudyData
-import lol.vfs.db.organizational.Class
-import lol.vfs.db.organizational.Grade
-import lol.vfs.db.testing.TestResult
-import lol.vfs.db.testing.TreatmentData
-import lol.vfs.db.users.Student
-import lol.vfs.db.users.UserType
-import lol.vfs.minilib.pq
+import lol.vfs.model.StudyData
+import lol.vfs.model.organizational.Class
+import lol.vfs.model.organizational.Grade
+import lol.vfs.model.testing.TestResult
+import lol.vfs.model.testing.TreatmentData
+import lol.vfs.model.users.Student
+import lol.vfs.model.users.UserType
 import lol.vfs.pages.components.layout.table.TRow
 
 

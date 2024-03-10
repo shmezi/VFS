@@ -1,4 +1,4 @@
-package lol.vfs.db.organizational
+package lol.vfs.model.organizational
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -9,6 +9,4 @@ data class Grade(
    val id: String,
    val prettyPrint:String,
    val classes: MutableSet<Class>
-) {
-
-}
+)

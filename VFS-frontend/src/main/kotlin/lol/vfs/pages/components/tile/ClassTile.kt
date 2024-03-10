@@ -1,7 +1,7 @@
 package lol.vfs.pages.components.tile
 
 import androidx.compose.runtime.Composable
-import lol.vfs.db.organizational.Class
+import lol.vfs.model.organizational.Class
 import lol.vfs.extensions.testStatus
 import lol.vfs.extensions.treatmentStatus
 

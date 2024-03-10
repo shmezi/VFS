@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -20,9 +21,11 @@ import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import lol.vfs.assets.ColorPallet
 import lol.vfs.client
-import lol.vfs.db.users.UserType
+import lol.vfs.model.users.UserType
 import lol.vfs.getUser
+import lol.vfs.minilib.pq
 import lol.vfs.pages.user.Admin
+import lol.vfs.pages.user.doctor.Doctor
 import lol.vfs.pages.user.parent.Parent
 import lol.vfs.requests.LoginRequest
 import lol.vfs.url
@@ -41,7 +44,7 @@ object Login : Screen {
 
             ) {
 
-            Text("Login")
+            Text("Login", fontSize = 45.sp)
 
             var username by remember { mutableStateOf("shmezi") }
             var password by remember { mutableStateOf("123456789") }
@@ -63,27 +66,24 @@ object Login : Screen {
                   }
                   val status = call.status
                   if (status == HttpStatusCode.OK) {
-
                      navigator.push(
                         when (getUser().type) {
                            UserType.ADMIN -> Admin
                            UserType.PARENT -> Parent
-                           UserType.DOCTOR -> TODO()
+                           UserType.DOCTOR -> Doctor
                         }
                      )
                      return@runBlocking
+                  } else {
+                     "No login".pq()
                   }
 
                }
             }) {
                Text("Login")
             }
+            Button({navigator.push(Register)}){ Text("Register")}
 
-            Button({
-               navigator.push(Register)
-            }) {
-               Text("Register")
-            }
          }
       }
    }

@@ -1,4 +1,4 @@
-package lol.vfs.db.testing
+package lol.vfs.model.testing
 
 import kotlinx.serialization.Serializable
 import lol.vfs.minilib.Date

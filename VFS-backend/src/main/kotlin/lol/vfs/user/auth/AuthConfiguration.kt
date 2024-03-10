@@ -1,9 +1,10 @@
-package lol.vfs
+package lol.vfs.user.auth
 
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.sessions.*
+import lol.vfs.struct.Database
 
 /**
  * Stored token used to authenticate a user
