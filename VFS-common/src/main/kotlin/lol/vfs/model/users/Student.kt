@@ -21,6 +21,4 @@ data class Student(
    val lastName: String,
    val tests: MutableMap<String, TestResult>,
    val treatments: MutableMap<String, TreatmentData>
-) {
-
-}
+)

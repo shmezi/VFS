@@ -29,7 +29,7 @@ fun RowScope.SchedulePage(kids: SnapshotStateList<Student>) {
       }
 
       TTable(
-         TRow("אושר", "אירוע", "ילד"),
+         TRow("אושר", "אירוע", "ילד","תאריך מועד"),
          * rows.toTypedArray(),
          hModifier = Modifier.height(40.dp),
          rModifier = Modifier.height(30.dp),

@@ -9,7 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
+import kotlinx.coroutines.runBlocking
 import lol.vfs.assets.NavIcon
+import lol.vfs.getUser
 import lol.vfs.model.users.Student
 import lol.vfs.model.users.UserType
 import lol.vfs.pages.components.button.LinkButton
@@ -27,7 +29,7 @@ object Parent : Screen {
       val dialogState = remember { mutableStateOf(false) }
 
       var dialog by dialogState
-      PageLayout(UserRequest("337616346", "עזרא", "גולומבק", UserType.PARENT), dialogState, {
+      PageLayout(runBlocking { getUser() }, dialogState, {
          Text(
             "האם מילאתם את הצהרת הבריאות באתר משרד החינוך?",
             fontSize = 30.sp,

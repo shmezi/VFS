@@ -71,7 +71,7 @@ fun Student?.rowifyApproval(status: Boolean): Array<TRow> {
          else Checkbox(test.value.approved, {
 //              test.value.approved = !test.value.approved
          })
-      }, { Text(test.key) }, { Text(name) }))
+      }, { Text(test.key) }, { Text(name) }, { Text(test.value.date.toString()) }))
    }
    for (treatment in treatments) {
       rows.add(TRow({
@@ -79,7 +79,7 @@ fun Student?.rowifyApproval(status: Boolean): Array<TRow> {
          else Checkbox(treatment.value.approved, {
 //              treatment.value.approved = !treatment.value.approved
          })
-      }, { Text(treatment.key) }, { Text(name) }))
+      }, { Text(treatment.key) }, { Text(name) }, { Text(treatment.value.date.toString()) }))
    }
 
    return rows.toTypedArray()
