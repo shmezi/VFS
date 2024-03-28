@@ -5,9 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import kotlinx.coroutines.runBlocking
+import lol.vfs.LocalCache
+import lol.vfs.extensions.DColumn
 import lol.vfs.model.organizational.Class
 import lol.vfs.model.users.Student
-import lol.vfs.extensions.DColumn
 
 @Composable
 fun RowScope.SelectionPanel(
@@ -19,6 +21,9 @@ fun RowScope.SelectionPanel(
 ) {
    val classes = remember { mutableStateListOf<Class>() }
    val students = remember { mutableStateListOf<Student>() }
+   runBlocking {
+
+   }
    //Grade panels
    DColumn(gWeight) { GradeSelectionPanel(classes, selected, students, showStatus = showStatus) }
    //Class panels

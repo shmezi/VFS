@@ -8,6 +8,7 @@ import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
+import lol.vfs.lib.printing.pq
 import lol.vfs.model.organizational.Class
 import lol.vfs.model.users.UserType
 import lol.vfs.requests.UserRequest
@@ -21,8 +22,13 @@ val client = HttpClient(CIO) {
 
 const val urlStem = "http://localhost:8080"
 fun String.url() = "$urlStem/$this"
+private var user: UserRequest? = null
 
-suspend fun getUser() = UserRequest("337616346", "עזרא", "גולומבק", UserType.ADMIN)
+fun setUser(u: UserRequest) {
+   user = u.pq("USER")
+}
+
+fun getUser() = user ?: throw NotImplementedError("Weird buddy")
 // : UserRequest{
 //   val user = client.get("user".url()).body<UserRequest>()
 //   return user

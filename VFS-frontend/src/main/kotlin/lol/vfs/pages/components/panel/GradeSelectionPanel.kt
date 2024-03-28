@@ -5,13 +5,16 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import kotlinx.coroutines.runBlocking
+import lol.vfs.LocalCache.getGradeIds
+import lol.vfs.LocalCache.getGrades
+import lol.vfs.LocalCache.getStudents
 import lol.vfs.model.organizational.Class
 import lol.vfs.model.users.Student
 import lol.vfs.pages.components.tile.GradeTile
-import lol.vfs.utils.grades
 
 @Composable
-fun GradeSelectionPanel(
+ fun GradeSelectionPanel(
    classes: SnapshotStateList<Class>,
    student: MutableState<Student?>,
    students: SnapshotStateList<Student>,
@@ -19,15 +22,16 @@ fun GradeSelectionPanel(
 ) {
    var student by student
 
-   grades.forEach { g ->
+   getGrades(runBlocking { getGradeIds() }).forEach { g ->
       GradeTile(g, showStatus = showStatus) { grade, selected ->
          if (selected)
             classes.addAll(grade.classes)
          else {
             grade.classes.forEach { clazz ->
-               if (clazz.students.firstOrNull { it == student } != null)
+               val s = getStudents(clazz.students)
+               if (s.firstOrNull { it == student } != null)
                   student = null
-               students.removeAll(clazz.students)
+               students.removeAll(s)
             }
             classes.removeAll(grade.classes)
 

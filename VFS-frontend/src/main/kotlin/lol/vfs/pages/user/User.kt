@@ -1,10 +1,6 @@
 package lol.vfs.pages.user
 
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import cafe.adriel.voyager.core.screen.Screen
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -15,11 +11,8 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
-import lol.vfs.client
-import lol.vfs.minilib.pq
+import lol.vfs.lib.printing.pq
 import lol.vfs.model.organizational.Class
-import lol.vfs.pages.components.layout.table.TRow
-import lol.vfs.pages.components.layout.table.TTable
 import lol.vfs.url
 
 object User : Screen {

@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import lol.vfs.model.StudyData
 import lol.vfs.extensions.h
-import lol.vfs.extensions.i
+import lol.vfs.extensions.studyImage
 
 @Composable
 fun LearningPanel(data: StudyData, onClick: (StudyData) -> Unit) {
@@ -39,7 +39,7 @@ fun LearningPanel(data: StudyData, onClick: (StudyData) -> Unit) {
       verticalArrangement = Arrangement.Top
    ) {
       Column(Modifier.weight(3f)) {
-         data.i()
+         data.studyImage()
       }
       4.h()
       Column(Modifier.weight(5f), horizontalAlignment = Alignment.CenterHorizontally) {

@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Start" type="Multirun" separateTabs="false" reuseTabsWithFailures="false" startOneByOne="true" markFailedProcess="true" hideSuccessProcess="false" delayTime="0.0">
+    <runConfiguration name="BackendKt" type="Kotlin" />
+    <runConfiguration name="FrontendKt" type="Kotlin" />
+    <method v="2">
+      <option name="LaunchBrowser.Before.Run" url="https://www.youtube.com/watch?v=xOTU3w6zq0I" />
+    </method>
+  </configuration>
+</component>

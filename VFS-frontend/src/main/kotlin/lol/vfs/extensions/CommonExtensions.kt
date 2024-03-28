@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import lol.vfs.LocalCache.getStudents
 import lol.vfs.assets.Status
 import lol.vfs.assets.Status.Companion.status
+import lol.vfs.lib.textOrNull
 import lol.vfs.model.StudyData
 import lol.vfs.model.organizational.Class
 import lol.vfs.model.organizational.Grade
@@ -50,11 +52,11 @@ fun TreatmentData.status(): Status {
 }
 
 @Composable
-fun StudyData.r() = painterResource("assets/learning/$image")
+fun StudyData.studyResource() = painterResource("assets/learning/$image")
 
 @Composable
-fun StudyData.i(modifier: Modifier = Modifier) =
-   Image(r(), description, contentScale = ContentScale.FillBounds, modifier = modifier)
+fun StudyData.studyImage(modifier: Modifier = Modifier) =
+   Image(studyResource(), description, contentScale = ContentScale.FillBounds, modifier = modifier)
 
 //Student extensions
 fun Student.treatmentStatus() = treatments.values.map { it.status() }.status()
@@ -92,11 +94,17 @@ fun Student?.rowifyDocTests(): Array<TRow> {
    this ?: return rows.toTypedArray()
 
    for (t in tests) {
+      var complete by mutableStateOf(t.value.isComplete())
       rows.add(TRow(
          {
             var u by remember { mutableStateOf(t.value.recommendations ?: "") }
+
             TextField(u, {
                u = it
+               t.value.recommendations = it.textOrNull()
+               complete = (t.value.results != null || t.value.recommendations != null)
+
+
             }, label = {
                Text("המלצה")
             })
@@ -106,12 +114,26 @@ fun Student?.rowifyDocTests(): Array<TRow> {
 
             TextField(
                value = text,
-               onValueChange = { text = it },
+               onValueChange = {
+                  text = it
+                  t.value.results = it.textOrNull()
+                  complete = (t.value.results != null || t.value.recommendations != null)
+
+               },
                label = { Text("תוצאה") }
             )
          },
          {
-            Checkbox(t.value.isComplete(), { })
+            Checkbox(complete, {
+               if (t.value.results.textOrNull() == null && t.value.recommendations.textOrNull() == null) {
+                  complete = !complete
+                  if (complete) {
+                     t.value.results = ""
+                  } else
+                     t.value.results = null
+               }
+
+            })
          },
          { t.value.approved.status().i() },
          { Text(t.key) }
@@ -130,17 +152,29 @@ fun Student?.rowifyDocTreatments(): Array<TRow> {
    this ?: return rows.toTypedArray()
 
    for (t in treatments) {
+      var complete by mutableStateOf(t.value.isComplete())
       rows.add(TRow(
          {
             var u by remember { mutableStateOf(t.value.afterEffects ?: "") }
             TextField(u, {
                u = it
+               t.value.afterEffects = it.textOrNull()
+               complete = t.value.afterEffects != null
             }, label = {
                Text("תופאות לוואי")
             })
          },
          {
-            Checkbox(t.value.isComplete(), { })
+            Checkbox(complete, {
+
+               if (t.value.afterEffects.textOrNull() == null) {
+                  complete = !complete
+                  if (complete) {
+                     t.value.afterEffects = ""
+                  } else
+                     t.value.afterEffects = null
+               }
+            })
          },
          { t.value.approved.status().i() },
          { Text(t.key) }
@@ -203,8 +237,8 @@ fun ColumnScope.DColumn(
 
 //Class extensions
 
-fun Class.testStatus() = students.map { it.testStatus() }.status()
-fun Class.treatmentStatus() = students.map { it.treatmentStatus() }.status()
+fun Class.testStatus() = getStudents(students).map { it.testStatus() }.status()
+fun Class.treatmentStatus() = getStudents(students).map { it.treatmentStatus() }.status()
 //Grade extensions
 
 fun Grade.testStatus() = classes.map { it.testStatus() }.status()
@@ -212,7 +246,8 @@ fun Grade.treatmentStatus() = classes.map { it.treatmentStatus() }.status()
 
 
 @Composable
-fun UserType.r() = painterResource("assets/user/$image.png")
+fun UserType.studyResource() = painterResource("assets/user/$image.png")
 
 @Composable
-fun UserType.i() = Image(r(), image, contentScale = ContentScale.Fit, modifier = Modifier.size(45.dp))
+fun UserType.studyImage() =
+   Image(studyResource(), image, contentScale = ContentScale.Fit, modifier = Modifier.size(45.dp))

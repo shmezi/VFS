@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import lol.vfs.assets.Status
 import lol.vfs.assets.Status.*
 import lol.vfs.model.users.UserType
-import lol.vfs.extensions.i
+import lol.vfs.extensions.studyImage
 import lol.vfs.extensions.w
 import lol.vfs.requests.UserRequest
 import java.time.LocalDateTime
@@ -36,7 +36,7 @@ fun User(user: UserRequest) {
          UserType.ADMIN -> UserType.ADMIN
          UserType.PARENT -> UserType.PARENT
          UserType.DOCTOR -> UserType.DOCTOR
-      }.i()
+      }.studyImage()
 
    }
 }

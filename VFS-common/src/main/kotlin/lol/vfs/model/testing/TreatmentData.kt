@@ -1,7 +1,7 @@
 package lol.vfs.model.testing
 
 import kotlinx.serialization.Serializable
-import lol.vfs.minilib.Date
+import lol.vfs.lib.Date
 
 /**
  * A treatment result of a student
@@ -18,5 +18,6 @@ data class TreatmentData(
     * Weather the treatment has been done on the kid or not
     * @return Weather the student has had the treatment
     */
+
    fun isComplete() = afterEffects != null
 }

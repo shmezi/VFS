@@ -19,7 +19,7 @@ import kotlinx.coroutines.runBlocking
 import lol.vfs.client
 import lol.vfs.url
 import lol.vfs.model.users.UserType
-import lol.vfs.minilib.pq
+import lol.vfs.lib.printing.pq
 import lol.vfs.requests.RegisterRequest
 
 object Register : Screen {
@@ -40,7 +40,7 @@ object Register : Screen {
       Column(
          Modifier.horizontalScroll(rememberScrollState()).fillMaxSize(),
          horizontalAlignment = Alignment.CenterHorizontally,
-         verticalArrangement = Arrangement.Center
+         verticalArrangement = Arrangement.Center,
       ) {
          Text("Register")
          TextField(name, {
@@ -94,8 +94,8 @@ object Register : Screen {
                   contentType(ContentType.Application.Json)
                   setBody(
                      RegisterRequest(
-                        id, name, last, "na", selection.pq("SELECTION") ?: return@runBlocking, password
-                     )
+                        id, name, last, "na", selection.pq("SELECTION") ?: return@runBlocking, password)
+
                   )
                }
             }

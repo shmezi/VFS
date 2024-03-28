@@ -12,16 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import lol.vfs.assets.ColorPallet
-import lol.vfs.model.organizational.Class
-import lol.vfs.model.organizational.Grade
 import lol.vfs.model.users.Student
 import lol.vfs.extensions.*
 
 @Composable
 fun StudentTile(
-   grade: Grade,
-   clazz: Class,
+   gradeID: String,
+   clazzID: String,
    student: Student,
    selected: Student?,
    showStatus: Boolean = true,
@@ -39,14 +38,14 @@ fun StudentTile(
          .border(BorderStroke(1.dp, Color.Black)),
       verticalAlignment = Alignment.Top,
 
-   ) {
+      ) {
 
       Column(
          Modifier.weight(3f).fillMaxHeight(),
          horizontalAlignment = Alignment.CenterHorizontally,
          verticalArrangement = Arrangement.Center
       ) {
-         Text("${clazz.id}/${grade.id}")
+         Text("${clazzID}/${gradeID}")
          3.h()
          if (showStatus)
             Row {
@@ -56,7 +55,7 @@ fun StudentTile(
             }
       }
       Column(Modifier.weight(7f), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.End) {
-         Text("${student.name} ${student.lastName}", fontSize = 30.sp(), fontWeight = FontWeight.Bold)
+         Text("${student.name} ${student.lastName}", fontSize = 30.sp, fontWeight = FontWeight.Bold)
          Text(student.id)
       }
 

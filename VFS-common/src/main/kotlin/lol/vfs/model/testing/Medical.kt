@@ -1,7 +1,9 @@
 package lol.vfs.model.testing
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import lol.vfs.lib.db.Id
+import lol.vfs.model.organizational.Age
+import org.bson.codecs.pojo.annotations.BsonId
 
 /**
  * A medical is a test or treatment that can be assigned to students, grades etc.
@@ -10,9 +12,11 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Medical(
-   @SerialName("_id")
+  @BsonId
    val name: String,
    val description: String,
+   val type: MedicalType,
+   val grades: Age
 ) {
    // TODO TODO: make this include the type it is.
 }

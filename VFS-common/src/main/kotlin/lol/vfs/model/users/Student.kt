@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import lol.vfs.model.testing.TestResult
 import lol.vfs.model.testing.TreatmentData
+import org.bson.codecs.pojo.annotations.BsonId
 
 /**
  * Represents a student at the school
@@ -15,10 +16,12 @@ import lol.vfs.model.testing.TreatmentData
  */
 @Serializable
 data class Student(
-   @SerialName("_id")
+   @BsonId
    val id: String,
-   val name: String,
-   val lastName: String,
-   val tests: MutableMap<String, TestResult>,
-   val treatments: MutableMap<String, TreatmentData>
+   var name: String,
+   var grade: String,
+   var clazz: String,
+   var lastName: String,
+   var tests: MutableMap<String, TestResult>,
+   var treatments: MutableMap<String, TreatmentData>
 )

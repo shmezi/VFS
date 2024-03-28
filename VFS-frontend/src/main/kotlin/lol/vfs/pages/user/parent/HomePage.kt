@@ -10,6 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.runBlocking
+import lol.vfs.LocalCache
 import lol.vfs.assets.Status
 import lol.vfs.model.users.Student
 import lol.vfs.extensions.*
@@ -18,8 +20,7 @@ import lol.vfs.pages.components.panel.parent.ParentReminderMessage
 import lol.vfs.pages.components.layout.table.TRow
 import lol.vfs.pages.components.layout.table.TTable
 import lol.vfs.pages.components.tile.StudentTile
-import lol.vfs.utils.studentClass
-import lol.vfs.utils.studentGrade
+
 
 @Composable
 fun RowScope.HomePage(kids: SnapshotStateList<Student>, kid: MutableState<Student?>, dialog: MutableState<Boolean>) {
@@ -76,10 +77,11 @@ fun RowScope.HomePage(kids: SnapshotStateList<Student>, kid: MutableState<Studen
       Text("ילדים", fontSize = 30.sp)
       Column(Modifier.fillMaxSize().weight(3f).verticalScroll(rememberScrollState())) {
          kids.forEach {
-            StudentTile(studentGrade[it]!!, studentClass[it]!!, it, kid) { s ->
+            StudentTile(it.grade, it.clazz, it, kid) { s ->
                kid = s
             }
          }
+
       }
 
    }

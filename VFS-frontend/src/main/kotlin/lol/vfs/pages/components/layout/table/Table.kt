@@ -2,14 +2,11 @@ package lol.vfs.pages.components.layout.table
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import lol.vfs.minilib.pq
 
 @Composable
 fun TTable(

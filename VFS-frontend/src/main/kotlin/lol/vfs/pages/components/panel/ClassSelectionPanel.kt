@@ -3,6 +3,8 @@ package lol.vfs.pages.components.panel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import lol.vfs.LocalCache
+import lol.vfs.LocalCache.getStudents
 import lol.vfs.model.organizational.Class
 import lol.vfs.model.users.Student
 import lol.vfs.pages.components.tile.ClassTile
@@ -16,10 +18,11 @@ fun ClassSelectionPanel(
 ) {
    classes.forEach { clazz ->
       ClassTile(clazz, showStatus = showStatus) { selected ->
-         if (selected) students.addAll(clazz.students)
+         val s = getStudents(clazz.students)
+         if (selected) students.addAll(s)
          else {
-            students.removeAll(clazz.students)
-            if (clazz.students.firstOrNull { it == student.value } != null)
+            students.removeAll(s)
+            if (s.firstOrNull { it == student.value } != null)
                student.value = null
          }
 

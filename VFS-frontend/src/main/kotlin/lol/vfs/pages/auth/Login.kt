@@ -16,19 +16,19 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
+import lol.vfs.*
 import lol.vfs.assets.ColorPallet
-import lol.vfs.client
 import lol.vfs.model.users.UserType
-import lol.vfs.getUser
-import lol.vfs.minilib.pq
+import lol.vfs.lib.printing.pq
 import lol.vfs.pages.user.Admin
 import lol.vfs.pages.user.doctor.Doctor
 import lol.vfs.pages.user.parent.Parent
 import lol.vfs.requests.LoginRequest
-import lol.vfs.url
+import lol.vfs.requests.UserRequest
 
 object Login : Screen {
 
@@ -46,8 +46,9 @@ object Login : Screen {
 
             Text("Login", fontSize = 45.sp)
 
-            var username by remember { mutableStateOf("shmezi") }
-            var password by remember { mutableStateOf("123456789") }
+            var username by remember { mutableStateOf("Shmezi") }
+            var password by remember { mutableStateOf("Shmezi") }
+
             TextField(username, {
                username = it
             }, placeholder = {
@@ -64,7 +65,9 @@ object Login : Screen {
                      contentType(ContentType.Application.Json)
                      setBody(LoginRequest(username, password))
                   }
+                  setUser(call.body<UserRequest>())
                   val status = call.status
+
                   if (status == HttpStatusCode.OK) {
                      navigator.push(
                         when (getUser().type) {
@@ -73,6 +76,7 @@ object Login : Screen {
                            UserType.DOCTOR -> Doctor
                         }
                      )
+
                      return@runBlocking
                   } else {
                      "No login".pq()
@@ -82,7 +86,7 @@ object Login : Screen {
             }) {
                Text("Login")
             }
-            Button({navigator.push(Register)}){ Text("Register")}
+            Button({ navigator.push(Register) }) { Text("Register") }
 
          }
       }

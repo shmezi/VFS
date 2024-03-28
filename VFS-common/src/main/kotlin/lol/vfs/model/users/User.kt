@@ -1,8 +1,7 @@
 package lol.vfs.model.users
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import lol.vfs.requests.UserRequest
+import org.bson.codecs.pojo.annotations.BsonId
 
 /** TODO: Rewrite docs
  * Represents a user that can log in to the system
@@ -10,19 +9,18 @@ import lol.vfs.requests.UserRequest
  * @param id User's personal national ID
  * @param pwd User's Hashed password
  * @param validTokens Mapping of token to IP
- * @param userTypes The different roles a user has
+ * @param type The different roles a user has
  */
-@Serializable
+
 data class User(
-   @SerialName("_id")
+   @BsonId
    val id: String,
-   val pwd: String,
-   val salt: String,
+   var pwd: String,
    var name: String,
    var lastName: String,
    var image: String,
    val validTokens: MutableList<String>,
-   val userTypes: UserType
+   var type: UserType
 ) {
-   fun public() = UserRequest(id, name, lastName, userTypes)
+   fun public() = UserRequest(id, name, lastName, type)
 }

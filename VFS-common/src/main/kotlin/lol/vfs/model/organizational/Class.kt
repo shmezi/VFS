@@ -9,5 +9,5 @@ data class Class(
    @SerialName("_id")
    val id: String,
    val prettyPrint: String,
-   val students: MutableSet<Student>
+   val students: MutableSet<String>
 )
