@@ -15,8 +15,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import lol.vfs.extensions.w
+import lol.vfs.styling
 
 /**
  * Vaccines - false
@@ -40,7 +42,7 @@ fun ButtonSwitch(onClick: (Boolean) -> Unit) {
             backgroundColor = if (state) Color.Gray else Color.Green
          )
       ) {
-         Text(text = "חיסונים")
+         Text(style = styling, overflow = TextOverflow.Ellipsis,text = "חיסונים")
       }
       5.w()
       OutlinedButton(
@@ -55,7 +57,7 @@ fun ButtonSwitch(onClick: (Boolean) -> Unit) {
             backgroundColor = if (state) Color.Green else Color.Gray
          )
       ) {
-         Text(text = "בדיקות")
+         Text(style = styling, overflow = TextOverflow.Ellipsis,text = "בדיקות")
       }
    }
 }

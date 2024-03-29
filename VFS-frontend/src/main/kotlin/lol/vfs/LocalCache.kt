@@ -2,10 +2,13 @@ package lol.vfs
 
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import lol.vfs.lib.printing.pq
+import lol.vfs.model.StudyData
 import lol.vfs.model.organizational.Grade
 import lol.vfs.model.users.*
+import lol.vfs.requests.LoginRequest
 import kotlin.collections.Collection
 import kotlin.collections.Set
 import kotlin.collections.forEach
@@ -17,10 +20,11 @@ import kotlin.collections.setOf
 object LocalCache {
    private val students = mutableMapOf<String, Student>()
    private val grades = mutableMapOf<String, Grade>()
-   val clazzGrade = mutableMapOf<String, String>()
    val studentGrade = mutableMapOf<String, String>()
    val studentClazz = mutableMapOf<String, String>()
-
+   val studyData = runBlocking {
+      client.get("studyData".url()) .body<Set<StudyData>>()
+   }
 
    suspend fun cacheStudent(id: String): Student {
       val student = client.get("student".url()) {
@@ -29,6 +33,15 @@ object LocalCache {
       students[id] = student
 
       return student
+   }
+
+   suspend fun postToCloud(student: String) {
+      client.post("update/student".url()) {
+         contentType(ContentType.Application.Json)
+         setBody(students[student] ?: return)
+
+
+      }
    }
 
 
@@ -49,7 +62,6 @@ object LocalCache {
 
       }.body<Grade>()
       grade.classes.forEach { clazz ->
-         clazzGrade[clazz.id] = grade.id
          clazz.students.forEach {
             studentGrade[it] = grade.id
             studentClazz[it] = clazz.id

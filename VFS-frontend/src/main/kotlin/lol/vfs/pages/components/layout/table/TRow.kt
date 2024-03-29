@@ -10,7 +10,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import lol.vfs.styling
 
 
 class TRow(private vararg val cells: @Composable ColumnScope.() -> Unit) {
@@ -21,7 +23,7 @@ class TRow(private vararg val cells: @Composable ColumnScope.() -> Unit) {
       *mutableListOf<@Composable ColumnScope.() -> Unit>().apply {
          cells.forEach {
             add {
-               Text(it ?: "")
+               Text(style = styling, overflow = TextOverflow.Ellipsis,text=it ?: "")
             }
          }
       }.toTypedArray()

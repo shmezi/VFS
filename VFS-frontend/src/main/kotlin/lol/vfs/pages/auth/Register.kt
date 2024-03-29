@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -21,6 +22,7 @@ import lol.vfs.url
 import lol.vfs.model.users.UserType
 import lol.vfs.lib.printing.pq
 import lol.vfs.requests.RegisterRequest
+import lol.vfs.styling
 
 object Register : Screen {
    @Composable
@@ -42,36 +44,36 @@ object Register : Screen {
          horizontalAlignment = Alignment.CenterHorizontally,
          verticalArrangement = Arrangement.Center,
       ) {
-         Text("Register")
+         Text(style = styling, overflow = TextOverflow.Ellipsis,text="Register")
          TextField(name, {
             name = it
          }, placeholder = {
-            Text("Name")
+            Text(style = styling, overflow = TextOverflow.Ellipsis,text="Name")
          })
 
          TextField(last, {
             last = it
          }, placeholder = {
-            Text("Last name")
+            Text(style = styling, overflow = TextOverflow.Ellipsis,text="Last name")
          })
          TextField(id, {
             id = it
          }, placeholder = {
-            Text("ID")
+            Text(style = styling, overflow = TextOverflow.Ellipsis,text="ID")
          })
 
          TextField(password, {
             password = it
-         }, placeholder = { Text("Password") }, visualTransformation = PasswordVisualTransformation()
+         }, placeholder = { Text(style = styling, overflow = TextOverflow.Ellipsis,text="Password") }, visualTransformation = PasswordVisualTransformation()
          )
          TextField(password2, {
             password2 = it
-         }, placeholder = { Text("Repeat password") }, visualTransformation = PasswordVisualTransformation()
+         }, placeholder = { Text(style = styling, overflow = TextOverflow.Ellipsis,text="Repeat password") }, visualTransformation = PasswordVisualTransformation()
          )
          Box {
             IconButton({ expanded = true }) {
                Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                  Text("${selection?.prettyPrint ?: "Select type"} ")
+                  Text(style = styling, overflow = TextOverflow.Ellipsis,text="${selection?.prettyPrint ?: "Select type"} ")
                   Icon(painterResource("assets/arrow.png"), "arrow", Modifier.size(10.dp))
                }
             }
@@ -82,7 +84,7 @@ object Register : Screen {
                   DropdownMenuItem({
                      selection = it
                   }) {
-                     Text(it.prettyPrint)
+                     Text(style = styling, overflow = TextOverflow.Ellipsis,text=it.prettyPrint)
                   }
                }
             }
@@ -94,7 +96,8 @@ object Register : Screen {
                   contentType(ContentType.Application.Json)
                   setBody(
                      RegisterRequest(
-                        id, name, last, "na", selection.pq("SELECTION") ?: return@runBlocking, password)
+                        id, name, last, "na", selection.pq("SELECTION") ?: return@runBlocking, password
+                     )
 
                   )
                }
@@ -103,7 +106,7 @@ object Register : Screen {
 
 
          }) {
-            Text("Register")
+            Text(style = styling, overflow = TextOverflow.Ellipsis,text="Register")
          }
       }
    }

@@ -2,6 +2,7 @@ package lol.vfs.data
 
 import lol.vfs.lib.db.CachedCollection
 import lol.vfs.lib.db.Database
+import lol.vfs.model.StudyData
 import lol.vfs.model.organizational.Age
 import lol.vfs.model.organizational.Grade
 import lol.vfs.model.testing.Medical
@@ -18,6 +19,7 @@ object Database {
    lateinit var parentDB: CachedCollection<Parent, String>
    lateinit var studentDB: CachedCollection<Student, String>
    lateinit var testDB: CachedCollection<Medical, String>
+   lateinit var studyData: CachedCollection<StudyData, String>
 
    init {
       Database {
@@ -51,12 +53,17 @@ object Database {
 
          studentDB = collection(Student::class.java, "student") {
             default {
-               Student(it, "", "","","", mutableMapOf(), mutableMapOf())
+               Student(it, "", "", "", "", mutableMapOf(), mutableMapOf())
             }
          }
          testDB = collection(Medical::class.java, "test") {
             default {
                Medical(it, "", MedicalType.TEST, Age.FIFTH)
+            }
+         }
+         studyData = collection(StudyData::class.java, "studyData") {
+            default {
+               StudyData(it, "", "", "", "")
             }
          }
 

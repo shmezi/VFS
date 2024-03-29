@@ -12,7 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.runBlocking
+import lol.vfs.LocalCache
 import lol.vfs.LocalCache.getStudents
 import lol.vfs.assets.Status
 import lol.vfs.assets.Status.Companion.status
@@ -25,6 +28,7 @@ import lol.vfs.model.testing.TreatmentData
 import lol.vfs.model.users.Student
 import lol.vfs.model.users.UserType
 import lol.vfs.pages.components.layout.table.TRow
+import lol.vfs.styling
 
 
 fun List<Status>.status(): Status {
@@ -66,22 +70,35 @@ fun Student.testStatus() = tests.values.map { it.status() }.status()
 fun Student?.rowifyApproval(status: Boolean): Array<TRow> {
 
    val rows = mutableListOf<TRow>()
-   this ?: return rows.toTypedArray()
+   val s = this ?: return rows.toTypedArray()
    for (test in tests) {
       rows.add(TRow({
+         var approved by mutableStateOf(test.value.approved)
          if (status) test.value.status().i()
-         else Checkbox(test.value.approved, {
-//              test.value.approved = !test.value.approved
-         })
-      }, { Text(test.key) }, { Text(name) }, { Text(test.value.date.toString()) }))
+         else Checkbox(approved, {
+
+            test.value.approved = !test.value.approved
+            approved = test.value.approved
+            runBlocking {
+               LocalCache.postToCloud(s.id)
+            }
+         }
+         )
+      }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=test.key) }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=name) }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=test.value.date.toString()) }))
    }
    for (treatment in treatments) {
       rows.add(TRow({
+         var approved by mutableStateOf(treatment.value.approved)
+
          if (status) treatment.value.status().i()
-         else Checkbox(treatment.value.approved, {
-//              treatment.value.approved = !treatment.value.approved
+         else Checkbox(approved, {
+            treatment.value.approved = !treatment.value.approved
+            approved = treatment.value.approved
+            runBlocking {
+               LocalCache.postToCloud(s.id)
+            }
          })
-      }, { Text(treatment.key) }, { Text(name) }, { Text(treatment.value.date.toString()) }))
+      }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=treatment.key) }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=name) }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=treatment.value.date.toString()) }))
    }
 
    return rows.toTypedArray()
@@ -91,55 +108,46 @@ fun Student?.rowifyApproval(status: Boolean): Array<TRow> {
 @Composable
 fun Student?.rowifyDocTests(): Array<TRow> {
    val rows = mutableListOf<TRow>()
-   this ?: return rows.toTypedArray()
+   val s = this ?: return rows.toTypedArray()
 
    for (t in tests) {
       var complete by mutableStateOf(t.value.isComplete())
-      rows.add(TRow(
-         {
-            var u by remember { mutableStateOf(t.value.recommendations ?: "") }
 
-            TextField(u, {
-               u = it
-               t.value.recommendations = it.textOrNull()
-               complete = (t.value.results != null || t.value.recommendations != null)
+      rows.add(TRow({
+         var u by remember { mutableStateOf(t.value.recommendations ?: "") }
 
+         TextField(u, {
+            u = it
+            t.value.recommendations = it.textOrNull()
+            runBlocking { LocalCache.postToCloud(s.id) }
+            complete = (t.value.results != null || t.value.recommendations != null)
 
-            }, label = {
-               Text("המלצה")
-            })
-         },
-         {
-            var text by remember { mutableStateOf(t.value.results ?: "") }
+         }, enabled = t.value.approved, label = {
+            Text(style = styling, overflow = TextOverflow.Ellipsis,text="המלצה")
+         })
+      }, {
+         var text by remember { mutableStateOf(t.value.results ?: "") }
 
-            TextField(
-               value = text,
-               onValueChange = {
-                  text = it
-                  t.value.results = it.textOrNull()
-                  complete = (t.value.results != null || t.value.recommendations != null)
+         TextField(value = text, onValueChange = {
+            text = it
+            t.value.results = it.textOrNull()
+            complete = (t.value.results != null || t.value.recommendations != null)
+            runBlocking { LocalCache.postToCloud(s.id) }
+         }, enabled = t.value.approved, label = { Text(style = styling, overflow = TextOverflow.Ellipsis,text="תוצאה") })
+      }, {
+         Checkbox(complete, {
+            if (t.value.results.textOrNull() == null && t.value.recommendations.textOrNull() == null) {
+               complete = !complete
+               if (complete) {
+                  t.value.results = ""
+               } else t.value.results = null
+               runBlocking { LocalCache.postToCloud(s.id) }
+            }
 
-               },
-               label = { Text("תוצאה") }
-            )
-         },
-         {
-            Checkbox(complete, {
-               if (t.value.results.textOrNull() == null && t.value.recommendations.textOrNull() == null) {
-                  complete = !complete
-                  if (complete) {
-                     t.value.results = ""
-                  } else
-                     t.value.results = null
-               }
+         }, enabled = t.value.approved)
+      }, { t.value.approved.status().i() }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=t.key) }
 
-            })
-         },
-         { t.value.approved.status().i() },
-         { Text(t.key) }
-
-      )
-      )
+      ))
    }
 
 
@@ -149,38 +157,36 @@ fun Student?.rowifyDocTests(): Array<TRow> {
 @Composable
 fun Student?.rowifyDocTreatments(): Array<TRow> {
    val rows = mutableListOf<TRow>()
-   this ?: return rows.toTypedArray()
+   val s = this ?: return rows.toTypedArray()
 
    for (t in treatments) {
       var complete by mutableStateOf(t.value.isComplete())
-      rows.add(TRow(
-         {
-            var u by remember { mutableStateOf(t.value.afterEffects ?: "") }
-            TextField(u, {
-               u = it
-               t.value.afterEffects = it.textOrNull()
-               complete = t.value.afterEffects != null
-            }, label = {
-               Text("תופאות לוואי")
-            })
-         },
-         {
-            Checkbox(complete, {
 
-               if (t.value.afterEffects.textOrNull() == null) {
-                  complete = !complete
-                  if (complete) {
-                     t.value.afterEffects = ""
-                  } else
-                     t.value.afterEffects = null
-               }
-            })
-         },
-         { t.value.approved.status().i() },
-         { Text(t.key) }
+      rows.add(TRow({
+         var u by remember { mutableStateOf(t.value.afterEffects ?: "") }
+         TextField(u, {
+            u = it
+            t.value.afterEffects = it.textOrNull()
+            complete = t.value.afterEffects != null
+            runBlocking { LocalCache.postToCloud(s.id) }
+         }, enabled = t.value.approved, label = {
+            Text(style = styling, overflow = TextOverflow.Ellipsis,text="תופאות לוואי")
+         })
+      }, {
+         Checkbox(complete, {
 
-      )
-      )
+            if (t.value.afterEffects.textOrNull() == null) {
+               complete = !complete
+               if (complete) {
+                  t.value.afterEffects = ""
+               } else t.value.afterEffects = null
+               runBlocking { LocalCache.postToCloud(s.id) }
+
+            }
+         }, enabled = t.value.approved)
+      }, { t.value.approved.status().i() }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=t.key) }
+
+      ))
    }
 
 
@@ -199,7 +205,6 @@ fun Student?.rowifyTests(): Array<TRow> {
 }
 
 @Composable
-
 fun Student?.rowifyTreatments(): Array<TRow> {
    val rows = mutableListOf<TRow>()
    this ?: return rows.toTypedArray()

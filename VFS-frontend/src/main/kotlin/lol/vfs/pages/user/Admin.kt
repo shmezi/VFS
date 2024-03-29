@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.coroutines.runBlocking
@@ -22,6 +23,7 @@ import lol.vfs.pages.components.layout.table.TRow
 import lol.vfs.pages.components.layout.table.TTable
 import lol.vfs.pages.components.panel.SelectionPanel
 import lol.vfs.pages.components.tile.StudentInfoPanel
+import lol.vfs.styling
 
 
 object Admin : Screen {
@@ -55,7 +57,11 @@ object Admin : Screen {
 
                TTable(
                   TRow("סטטוס", "שם טיפול"),
-                  *mapping.map { TRow({ it.value.i() }, { Text(it.key) }) }.toTypedArray(),
+                  *mapping.map {
+                     TRow(
+                        { it.value.i() },
+                        { Text(style = styling, overflow = TextOverflow.Ellipsis, text = it.key) })
+                  }.toTypedArray(),
                   gModifier = Modifier.padding(5.dp),
                   hModifier = Modifier.height(40.dp),
                   rModifier = Modifier.height(30.dp),

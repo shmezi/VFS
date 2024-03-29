@@ -11,11 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import lol.vfs.assets.ColorPallet
 import lol.vfs.model.users.Student
 import lol.vfs.extensions.*
+import lol.vfs.styling
 
 @Composable
 fun StudentTile(
@@ -45,7 +47,7 @@ fun StudentTile(
          horizontalAlignment = Alignment.CenterHorizontally,
          verticalArrangement = Arrangement.Center
       ) {
-         Text("${clazzID}/${gradeID}")
+         Text(style = styling, overflow = TextOverflow.Ellipsis,text="${clazzID}/${gradeID}")
          3.h()
          if (showStatus)
             Row {
@@ -55,8 +57,8 @@ fun StudentTile(
             }
       }
       Column(Modifier.weight(7f), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.End) {
-         Text("${student.name} ${student.lastName}", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-         Text(student.id)
+         Text(style = styling, overflow = TextOverflow.Ellipsis,text="${student.name} ${student.lastName}", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+         Text(style = styling, overflow = TextOverflow.Ellipsis,text=student.id)
       }
 
    }

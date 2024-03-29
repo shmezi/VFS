@@ -20,6 +20,7 @@ val client = HttpClient(CIO) {
    }
 }
 
+
 const val urlStem = "http://localhost:8080"
 fun String.url() = "$urlStem/$this"
 private var user: UserRequest? = null

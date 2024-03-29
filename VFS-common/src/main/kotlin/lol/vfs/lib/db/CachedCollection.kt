@@ -35,12 +35,8 @@ class CachedCollection<T : Any, TID : Any>(private val type: Class<T>, val name:
       return collection.find(eq("_id", id)).firstOrNull()
    }
 
-   suspend fun update(item: T) {
-      toUpdate.add(idOf(item))
-      //Add item to the cache plus add to the to update list
-   }
-
-   suspend fun update(id: TID) {
+   suspend fun replace(id: TID, item: T) {
+      cached[id] = item
       toUpdate.add(id)
       //Add item to the cache plus add to the to update list
    }

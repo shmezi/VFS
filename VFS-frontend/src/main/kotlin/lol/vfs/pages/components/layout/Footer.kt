@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import lol.vfs.assets.Status
 import lol.vfs.assets.Status.*
@@ -16,6 +17,7 @@ import lol.vfs.model.users.UserType
 import lol.vfs.extensions.studyImage
 import lol.vfs.extensions.w
 import lol.vfs.requests.UserRequest
+import lol.vfs.styling
 import java.time.LocalDateTime
 
 
@@ -28,8 +30,8 @@ fun User(user: UserRequest) {
       ) {
 
       Column(horizontalAlignment = Alignment.End) {
-         Text("${user.name} ${user.lastName}", textAlign = TextAlign.Left)
-         Text("${now.year}/${now.month.value}/${now.dayOfMonth}", textAlign = TextAlign.Left)
+         Text(style = styling, overflow = TextOverflow.Ellipsis,text="${user.name} ${user.lastName}", textAlign = TextAlign.Left)
+         Text(style = styling, overflow = TextOverflow.Ellipsis,text="${now.year}/${now.month.value}/${now.dayOfMonth}", textAlign = TextAlign.Left)
       }
 
       when (user.type) {
@@ -44,7 +46,7 @@ fun User(user: UserRequest) {
 @Composable
 fun Explanation(icon: Status) {
    Row(verticalAlignment = Alignment.CenterVertically) {
-      Text(icon.description)
+      Text(style = styling, overflow = TextOverflow.Ellipsis,text=icon.description)
       5.w()
       icon.i()
    }

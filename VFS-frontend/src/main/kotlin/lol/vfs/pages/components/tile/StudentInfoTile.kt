@@ -9,9 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import lol.vfs.LocalCache
 import lol.vfs.model.users.Student
+import lol.vfs.styling
 
 
 @Composable
@@ -19,15 +21,15 @@ fun StudentInfoPanel(student: Student?) {
    student ?: return
    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.End) {
       Column(Modifier, horizontalAlignment = Alignment.End) {
-         Text(
+         Text(style = styling, overflow = TextOverflow.Ellipsis,text=
             "${LocalCache.studentClazz[student.id]}/${LocalCache.studentGrade[student.id]}", fontSize = 30.sp
          )
       }
       Column(
          Modifier, horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Top
       ) {
-         Text("${student.name} ${student.lastName}", fontSize = 45.sp, maxLines = 1, fontWeight = FontWeight.Bold)
-         Text(student.id, fontSize = 30.sp, fontWeight = FontWeight.Bold)
+         Text(style = styling, overflow = TextOverflow.Ellipsis,text="${student.name} ${student.lastName}", fontSize = 45.sp, maxLines = 1, fontWeight = FontWeight.Bold)
+         Text(style = styling, overflow = TextOverflow.Ellipsis,text=student.id, fontSize = 30.sp, fontWeight = FontWeight.Bold)
       }
    }
 }

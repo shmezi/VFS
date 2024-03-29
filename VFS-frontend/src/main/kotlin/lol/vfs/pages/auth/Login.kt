@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -44,7 +45,7 @@ object Login : Screen {
 
             ) {
 
-            Text("Login", fontSize = 45.sp)
+            Text(style = styling, overflow = TextOverflow.Ellipsis,text="Login", fontSize = 45.sp)
 
             var username by remember { mutableStateOf("Shmezi") }
             var password by remember { mutableStateOf("Shmezi") }
@@ -52,11 +53,11 @@ object Login : Screen {
             TextField(username, {
                username = it
             }, placeholder = {
-               Text("Username")
+               Text(style = styling, overflow = TextOverflow.Ellipsis,text="Username")
             })
             TextField(password, {
                password = it
-            }, placeholder = { Text("Password") }, visualTransformation = PasswordVisualTransformation()
+            }, placeholder = { Text(style = styling, overflow = TextOverflow.Ellipsis,text="Password") }, visualTransformation = PasswordVisualTransformation()
             )
             val navigator = LocalNavigator.currentOrThrow
             Button({
@@ -84,9 +85,9 @@ object Login : Screen {
 
                }
             }) {
-               Text("Login")
+               Text(style = styling, overflow = TextOverflow.Ellipsis,text="Login")
             }
-            Button({ navigator.push(Register) }) { Text("Register") }
+            Button({ navigator.push(Register) }) { Text(style = styling, overflow = TextOverflow.Ellipsis,text="Register") }
 
          }
       }

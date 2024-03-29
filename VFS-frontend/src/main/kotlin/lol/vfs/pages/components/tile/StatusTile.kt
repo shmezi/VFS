@@ -10,10 +10,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import lol.vfs.assets.ColorPallet
 import lol.vfs.assets.Status
 import lol.vfs.extensions.w
+import lol.vfs.styling
 
 @Composable
 fun StatusTile(
@@ -48,7 +50,7 @@ fun StatusTile(
          }
          10.w()
       }
-      Text(text)
+      Text(style = styling, overflow = TextOverflow.Ellipsis,text=text)
 
    }
 }

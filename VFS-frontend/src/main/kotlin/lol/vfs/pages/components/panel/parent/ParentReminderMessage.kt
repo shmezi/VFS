@@ -7,8 +7,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import lol.vfs.extensions.w
+import lol.vfs.styling
 
 @Composable
 fun ParentReminderMessage(approved: Boolean, click: () -> Unit) {
@@ -23,11 +25,18 @@ fun ParentReminderMessage(approved: Boolean, click: () -> Unit) {
    }
    4.w()
    Column(horizontalAlignment = Alignment.End) {
-      Text(text, color = color, textAlign = TextAlign.Right, fontSize = 25.sp)
+      Text(
+         style = styling,
+         overflow = TextOverflow.Ellipsis,
+         text = text,
+         color = color,
+         textAlign = TextAlign.Right,
+         fontSize = 25.sp
+      )
       if (!approved)
          Button({
             click()
-         }) { Text("לאישור") }
+         }) { Text(style = styling, overflow = TextOverflow.Ellipsis, text = "לאישור") }
 
    }
 }
