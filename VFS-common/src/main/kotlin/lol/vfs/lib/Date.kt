@@ -9,6 +9,10 @@ data class Date(var year: Int, var month: Int, var day: Int) {
    override fun toString() = "$year/$month/$day"
 
    companion object {
+      /**
+       * Returns the current year we are in
+       *
+       */
       fun today() = SimpleDateFormat("yyyy").format(Date()).toInt()
    }
 }

@@ -4,15 +4,23 @@ package lol.vfs
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
+import io.ktor.server.plugins.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.runBlocking
-import kotlinx.css.tr
 import lol.vfs.data.Database
+import lol.vfs.data.School.assignCurrentYear
+import lol.vfs.data.School.getGrade
+import lol.vfs.data.School.register
+import lol.vfs.data.UserAuth.register
+import lol.vfs.model.medical.Medical
+import lol.vfs.model.medical.MedicalType
+import lol.vfs.model.organizational.Age
+import lol.vfs.model.users.UserType
+import lol.vfs.requests.RegisterRequest
 import lol.vfs.routing.auth
 import lol.vfs.routing.classroom
-import lol.vfs.utils.SDS
-import javax.xml.crypto.Data
+import java.io.File
 
 
 fun main(args: Array<String>) = EngineMain.main(args)
@@ -25,24 +33,20 @@ fun Application.module() {
    install(Routing)
    auth()
    classroom()
-   if (false) runBlocking {
-      SDS.students.forEach {
-         Database.studentDB.getOrDefault(it.id) {
-            name = it.name
-            lastName = it.lastName
-            tests = it.tests
-            treatments = it.treatments
-            clazz = it.clazz
-            grade =  it.clazz
-         }
-      }
-      SDS.grades.forEach {
-         Database.gradeDB.getOrDefault(it.id) {
-            classes = it.classes
-            startYear = it.startYear
-            prettyPrint = it.prettyPrint
-         }
-      }
+   runBlocking {
+       Medical("testing123",MedicalType.TEST,Age.FIRST).register()
+      Medical("testing1",MedicalType.TEST,Age.SECOND).register()
+      assignCurrentYear(getGrade(1)!!)
+
+      if (!Database.studentDB.isEmpty()) return@runBlocking
+      Database.importClassroomData(
+         File(
+            javaClass.classLoader.getResource("students.csv")?.path ?: throw NotFoundException("OOF")
+         )
+      )
+      RegisterRequest("1", "עזרא", "גולומבק", UserType.PARENT, "123456789").register()
+      RegisterRequest("2", "אריק", "גולומבק", UserType.ADMIN, "123456789").register()
+      RegisterRequest("3", "עדינה", "גולומבק", UserType.DOCTOR, "123456789").register()
 
    }
 }

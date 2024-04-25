@@ -20,11 +20,11 @@ import lol.vfs.LocalCache.getStudents
 import lol.vfs.assets.Status
 import lol.vfs.assets.Status.Companion.status
 import lol.vfs.lib.textOrNull
-import lol.vfs.model.StudyData
+import lol.vfs.model.medical.learning.LearningMaterial
 import lol.vfs.model.organizational.Class
 import lol.vfs.model.organizational.Grade
-import lol.vfs.model.testing.TestResult
-import lol.vfs.model.testing.TreatmentData
+import lol.vfs.model.medical.TestData
+import lol.vfs.model.medical.TreatmentData
 import lol.vfs.model.users.Student
 import lol.vfs.model.users.UserType
 import lol.vfs.pages.components.layout.table.TRow
@@ -39,7 +39,7 @@ fun List<Status>.status(): Status {
    return Status.PARTIAL
 }
 
-fun TestResult.status(): Status {
+fun TestData.status(): Status {
    return when {
       !approved -> Status.DENIED
       isComplete() -> Status.DONE
@@ -56,14 +56,17 @@ fun TreatmentData.status(): Status {
 }
 
 @Composable
-fun StudyData.studyResource() = painterResource("assets/learning/$image")
+fun LearningMaterial.studyResource() = painterResource("assets/learning/$image")
 
 @Composable
-fun StudyData.studyImage(modifier: Modifier = Modifier) =
+fun LearningMaterial.studyImage(modifier: Modifier = Modifier) =
    Image(studyResource(), description, contentScale = ContentScale.FillBounds, modifier = modifier)
 
 //Student extensions
+@Composable
 fun Student.treatmentStatus() = treatments.values.map { it.status() }.status()
+
+@Composable
 fun Student.testStatus() = tests.values.map { it.status() }.status()
 
 @Composable
@@ -72,33 +75,45 @@ fun Student?.rowifyApproval(status: Boolean): Array<TRow> {
    val rows = mutableListOf<TRow>()
    val s = this ?: return rows.toTypedArray()
    for (test in tests) {
-      rows.add(TRow({
-         var approved by mutableStateOf(test.value.approved)
-         if (status) test.value.status().i()
-         else Checkbox(approved, {
+      rows.add(
+         TRow(
+            {
+               var approved by mutableStateOf(test.value.approved)
+               if (status) test.value.status().image()
+               else Checkbox(approved, {
 
-            test.value.approved = !test.value.approved
-            approved = test.value.approved
-            runBlocking {
-               LocalCache.postToCloud(s.id)
-            }
-         }
-         )
-      }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=test.key) }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=name) }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=test.value.date.toString()) }))
+                  test.value.approved = !test.value.approved
+                  approved = test.value.approved
+                  runBlocking {
+                     LocalCache.postToCloud(s.id)
+                  }
+               }
+               )
+            },
+            { Text(style = styling, overflow = TextOverflow.Ellipsis, text = test.key) },
+            { Text(style = styling, overflow = TextOverflow.Ellipsis, text = name) },
+            { Text(style = styling, overflow = TextOverflow.Ellipsis, text = test.value.date.toString()) })
+      )
    }
    for (treatment in treatments) {
-      rows.add(TRow({
-         var approved by mutableStateOf(treatment.value.approved)
+      rows.add(
+         TRow(
+            {
+               var approved by mutableStateOf(treatment.value.approved)
 
-         if (status) treatment.value.status().i()
-         else Checkbox(approved, {
-            treatment.value.approved = !treatment.value.approved
-            approved = treatment.value.approved
-            runBlocking {
-               LocalCache.postToCloud(s.id)
-            }
-         })
-      }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=treatment.key) }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=name) }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=treatment.value.date.toString()) }))
+               if (status) treatment.value.status().image()
+               else Checkbox(approved, {
+                  treatment.value.approved = !treatment.value.approved
+                  approved = treatment.value.approved
+                  runBlocking {
+                     LocalCache.postToCloud(s.id)
+                  }
+               })
+            },
+            { Text(style = styling, overflow = TextOverflow.Ellipsis, text = treatment.key) },
+            { Text(style = styling, overflow = TextOverflow.Ellipsis, text = name) },
+            { Text(style = styling, overflow = TextOverflow.Ellipsis, text = treatment.value.date.toString()) })
+      )
    }
 
    return rows.toTypedArray()
@@ -123,17 +138,21 @@ fun Student?.rowifyDocTests(): Array<TRow> {
             complete = (t.value.results != null || t.value.recommendations != null)
 
          }, enabled = t.value.approved, label = {
-            Text(style = styling, overflow = TextOverflow.Ellipsis,text="המלצה")
+            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "המלצה")
          })
       }, {
          var text by remember { mutableStateOf(t.value.results ?: "") }
 
-         TextField(value = text, onValueChange = {
-            text = it
-            t.value.results = it.textOrNull()
-            complete = (t.value.results != null || t.value.recommendations != null)
-            runBlocking { LocalCache.postToCloud(s.id) }
-         }, enabled = t.value.approved, label = { Text(style = styling, overflow = TextOverflow.Ellipsis,text="תוצאה") })
+         TextField(
+            value = text,
+            onValueChange = {
+               text = it
+               t.value.results = it.textOrNull()
+               complete = (t.value.results != null || t.value.recommendations != null)
+               runBlocking { LocalCache.postToCloud(s.id) }
+            },
+            enabled = t.value.approved,
+            label = { Text(style = styling, overflow = TextOverflow.Ellipsis, text = "תוצאה") })
       }, {
          Checkbox(complete, {
             if (t.value.results.textOrNull() == null && t.value.recommendations.textOrNull() == null) {
@@ -145,7 +164,7 @@ fun Student?.rowifyDocTests(): Array<TRow> {
             }
 
          }, enabled = t.value.approved)
-      }, { t.value.approved.status().i() }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=t.key) }
+      }, { t.value.approved.status().image() }, { Text(style = styling, overflow = TextOverflow.Ellipsis, text = t.key) }
 
       ))
    }
@@ -170,7 +189,7 @@ fun Student?.rowifyDocTreatments(): Array<TRow> {
             complete = t.value.afterEffects != null
             runBlocking { LocalCache.postToCloud(s.id) }
          }, enabled = t.value.approved, label = {
-            Text(style = styling, overflow = TextOverflow.Ellipsis,text="תופאות לוואי")
+            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "תופאות לוואי")
          })
       }, {
          Checkbox(complete, {
@@ -184,7 +203,7 @@ fun Student?.rowifyDocTreatments(): Array<TRow> {
 
             }
          }, enabled = t.value.approved)
-      }, { t.value.approved.status().i() }, { Text(style = styling, overflow = TextOverflow.Ellipsis,text=t.key) }
+      }, { t.value.approved.status().image() }, { Text(style = styling, overflow = TextOverflow.Ellipsis, text = t.key) }
 
       ))
    }
@@ -241,18 +260,23 @@ fun ColumnScope.DColumn(
 
 
 //Class extensions
-
+@Composable
 fun Class.testStatus() = getStudents(students).map { it.testStatus() }.status()
-fun Class.treatmentStatus() = getStudents(students).map { it.treatmentStatus() }.status()
-//Grade extensions
 
-fun Grade.testStatus() = classes.map { it.testStatus() }.status()
-fun Grade.treatmentStatus() = classes.map { it.treatmentStatus() }.status()
+@Composable
+fun Class.treatmentStatus() = getStudents(students).map { it.treatmentStatus() }.status()
+
+//Grade extensions
+@Composable
+fun Grade.testStatus() = classes.values.map { it.testStatus() }.status()
+
+@Composable
+fun Grade.treatmentStatus() = classes.values.map { it.treatmentStatus() }.status()
 
 
 @Composable
-fun UserType.studyResource() = painterResource("assets/user/$image.png")
+fun UserType.studyResource() = painterResource("assets/user/${image()}.png")
 
 @Composable
 fun UserType.studyImage() =
-   Image(studyResource(), image, contentScale = ContentScale.Fit, modifier = Modifier.size(45.dp))
+   Image(studyResource(), image(), contentScale = ContentScale.Fit, modifier = Modifier.size(45.dp))

@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,8 +19,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun DialogPupUp(dialog: MutableState<Boolean>, content: @Composable ColumnScope.() -> Unit) {
-   var dialog by dialog
+fun DialogPupUp(content: @Composable ColumnScope.() -> Unit) {
+   var dialog by remember { mutableStateOf(true) }
    if (dialog) {
       Column(Modifier.fillMaxSize().background(color = Color.Blue.copy(0.8f))) {
          Dialog(onDismissRequest = {

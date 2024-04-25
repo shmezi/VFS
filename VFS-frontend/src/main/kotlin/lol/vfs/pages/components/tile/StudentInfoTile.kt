@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import lol.vfs.LocalCache
+import lol.vfs.lib.gimatria.GimatriaConverter.toGimatria
 import lol.vfs.model.users.Student
 import lol.vfs.styling
 
@@ -21,15 +22,29 @@ fun StudentInfoPanel(student: Student?) {
    student ?: return
    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.End) {
       Column(Modifier, horizontalAlignment = Alignment.End) {
-         Text(style = styling, overflow = TextOverflow.Ellipsis,text=
-            "${LocalCache.studentClazz[student.id]}/${LocalCache.studentGrade[student.id]}", fontSize = 30.sp
+         Text(
+            style = styling, overflow = TextOverflow.Ellipsis, text =
+            "${student.grade.toGimatria()}/${student.clazz}", fontSize = 30.sp
          )
       }
       Column(
          Modifier, horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Top
       ) {
-         Text(style = styling, overflow = TextOverflow.Ellipsis,text="${student.name} ${student.lastName}", fontSize = 45.sp, maxLines = 1, fontWeight = FontWeight.Bold)
-         Text(style = styling, overflow = TextOverflow.Ellipsis,text=student.id, fontSize = 30.sp, fontWeight = FontWeight.Bold)
+         Text(
+            style = styling,
+            overflow = TextOverflow.Ellipsis,
+            text = "${student.name} ${student.lastName}",
+            fontSize = 45.sp,
+            maxLines = 1,
+            fontWeight = FontWeight.Bold
+         )
+         Text(
+            style = styling,
+            overflow = TextOverflow.Ellipsis,
+            text = student.id,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold
+         )
       }
    }
 }

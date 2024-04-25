@@ -44,36 +44,46 @@ object Register : Screen {
          horizontalAlignment = Alignment.CenterHorizontally,
          verticalArrangement = Arrangement.Center,
       ) {
-         Text(style = styling, overflow = TextOverflow.Ellipsis,text="Register")
+         Text(style = styling, overflow = TextOverflow.Ellipsis, text = "Register")
          TextField(name, {
             name = it
          }, placeholder = {
-            Text(style = styling, overflow = TextOverflow.Ellipsis,text="Name")
+            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "Name")
          })
 
          TextField(last, {
             last = it
          }, placeholder = {
-            Text(style = styling, overflow = TextOverflow.Ellipsis,text="Last name")
+            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "Last name")
          })
          TextField(id, {
             id = it
          }, placeholder = {
-            Text(style = styling, overflow = TextOverflow.Ellipsis,text="ID")
+            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "ID")
          })
 
-         TextField(password, {
-            password = it
-         }, placeholder = { Text(style = styling, overflow = TextOverflow.Ellipsis,text="Password") }, visualTransformation = PasswordVisualTransformation()
+         TextField(password,
+            {
+               password = it
+            },
+            placeholder = { Text(style = styling, overflow = TextOverflow.Ellipsis, text = "Password") },
+            visualTransformation = PasswordVisualTransformation()
          )
-         TextField(password2, {
-            password2 = it
-         }, placeholder = { Text(style = styling, overflow = TextOverflow.Ellipsis,text="Repeat password") }, visualTransformation = PasswordVisualTransformation()
+         TextField(password2,
+            {
+               password2 = it
+            },
+            placeholder = { Text(style = styling, overflow = TextOverflow.Ellipsis, text = "Repeat password") },
+            visualTransformation = PasswordVisualTransformation()
          )
          Box {
             IconButton({ expanded = true }) {
                Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                  Text(style = styling, overflow = TextOverflow.Ellipsis,text="${selection?.prettyPrint ?: "Select type"} ")
+                  Text(
+                     style = styling,
+                     overflow = TextOverflow.Ellipsis,
+                     text = "${selection?.prettyPrint() ?: "Select type"} "
+                  )
                   Icon(painterResource("assets/arrow.png"), "arrow", Modifier.size(10.dp))
                }
             }
@@ -84,7 +94,7 @@ object Register : Screen {
                   DropdownMenuItem({
                      selection = it
                   }) {
-                     Text(style = styling, overflow = TextOverflow.Ellipsis,text=it.prettyPrint)
+                     Text(style = styling, overflow = TextOverflow.Ellipsis, text = it.prettyPrint())
                   }
                }
             }
@@ -96,7 +106,7 @@ object Register : Screen {
                   contentType(ContentType.Application.Json)
                   setBody(
                      RegisterRequest(
-                        id, name, last, "na", selection.pq("SELECTION") ?: return@runBlocking, password
+                        id, name, last, selection.pq("SELECTION") ?: return@runBlocking, password
                      )
 
                   )
@@ -106,7 +116,7 @@ object Register : Screen {
 
 
          }) {
-            Text(style = styling, overflow = TextOverflow.Ellipsis,text="Register")
+            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "Register")
          }
       }
    }

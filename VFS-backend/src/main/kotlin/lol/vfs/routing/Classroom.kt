@@ -2,6 +2,7 @@ package lol.vfs.routing
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -17,26 +18,25 @@ fun Application.classroom() {
       get("student") {
          //TODO: Add authentication to user type
          val id = call.receive<String>()
-         call.respond(School.getStudent(id) ?: return@get)
+         call.respond(School.getStudent(id) ?: throw NotFoundException("Student not found with id of $id"))
       }
       get("grade") {
          //TODO: Add authentication to user type
+         val id = call.receive<Int>()
 
-         val id = call.receive<String>()
-
-         call.respond(School.getGrade(id) ?: return@get)
+         call.respond(School.getGrade(id)?: throw NotFoundException("Grade not found with id of $id"))
       }
       get("parent") {
          val id = call.receive<String>()
-         call.respond(School.getParent(id) ?: return@get)
+         call.respond(School.getParent(id) ?:  throw NotFoundException("Parent not found with id of $id"))
       }
       get("doctor") {
          val id = call.receive<String>()
-         call.respond(School.getDoctor(id) ?: return@get)
+         call.respond(School.getDoctor(id) ?:  throw NotFoundException("Doctor not found with id of $id"))
       }
       get("admin") {
          val id = call.receive<String>()
-         call.respond(School.getAdmin(id) ?: return@get)
+         call.respond(School.getAdmin(id) ?:  throw NotFoundException("Admin  not found with id of $id"))
       }
 
       route("update") {

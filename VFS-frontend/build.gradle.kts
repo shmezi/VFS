@@ -5,7 +5,7 @@ plugins {
    kotlin("jvm") version "1.9.22"
    id("org.jetbrains.compose") version "1.5.12"
    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
-
+   id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "lol.ezra"
@@ -58,7 +58,7 @@ compose.desktop {
       mainClass = "MainKt"
 
       nativeDistributions {
-         targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+         targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
          packageName = "VFS-frontend"
          packageVersion = "1.0.0"
       }

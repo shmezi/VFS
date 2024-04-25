@@ -6,13 +6,15 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import lol.vfs.assets.ColorPallet
 import lol.vfs.assets.ColorPallet.Companion.bg
+import lol.vfs.getUser
+import lol.vfs.pages.components.layout.footer.Footer
 import lol.vfs.requests.UserRequest
 
+/**
+ * The layout used throughout all the pages
+ */
 @Composable
 fun PageLayout(
-   user: UserRequest,
-   dialogOpen: MutableState<Boolean>? = null,
-   dialog: @Composable ColumnScope.() -> Unit = {},
    scope: @Composable ColumnScope.() -> Unit
 ) {
    Box {
@@ -21,12 +23,7 @@ fun PageLayout(
             scope()
 
          }
-         Column(Modifier.bg(ColorPallet.TEXTP).weight(1f), verticalArrangement = Arrangement.SpaceEvenly) {
-            Footer(user)
-         }
-      }
-      if (dialogOpen?.value == true) {
-         DialogPupUp(dialogOpen, dialog)
+         Footer(getUser())
       }
    }
 }

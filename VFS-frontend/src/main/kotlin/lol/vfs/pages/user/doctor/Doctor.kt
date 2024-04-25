@@ -9,12 +9,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import kotlinx.coroutines.runBlocking
 import lol.vfs.assets.ColorPallet
 import lol.vfs.assets.ColorPallet.Companion.bg
 import lol.vfs.model.users.Student
 import lol.vfs.extensions.*
-import lol.vfs.getUser
 import lol.vfs.pages.components.button.ButtonSwitch
 import lol.vfs.pages.components.layout.PageLayout
 import lol.vfs.pages.components.layout.Switch
@@ -30,12 +28,12 @@ object Doctor : Screen {
    override fun Content() {
       val studentState = remember { mutableStateOf<Student?>(null) }
       val student by studentState
-      PageLayout(runBlocking { getUser() }) {
+      PageLayout {
          Row(
-            Modifier.fillMaxSize().bg(ColorPallet.BACKGROUNDP)
+            Modifier.fillMaxSize().bg(ColorPallet.BG_A)
          ) {
             var state by remember { mutableStateOf(true) }
-            SelectionPanel(studentState, sWeight = 3f, showStatus = false)
+
             Column(
                Modifier.weight(7f),
                horizontalAlignment = Alignment.End
@@ -46,13 +44,12 @@ object Doctor : Screen {
                   state = it
                }
                TTable(
-                  Switch(
-                     state,
+                  state.Switch(
+
                      TRow("המלצות", "תוצאות", "בוצע", "סטטוס", "שם בדיקה"),
                      TRow("תופעות לוואי", "בוצע", "סטטוס", "שם טיפול")
                   ),
-                  *Switch(
-                     state,
+                  *state.Switch(
                      s.rowifyDocTests(),
                      s.rowifyDocTreatments()
                   ),
@@ -60,6 +57,7 @@ object Doctor : Screen {
                   rModifier = Modifier.height(50.dp),
                )
             }
+             SelectionPanel(studentState, sWeight = 3f, showStatus = false)
          }
       }
 

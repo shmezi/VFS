@@ -40,19 +40,14 @@ fun Application.auth() {
       route("auth") {
          post("login") {
             val loginRequest = call.receive<LoginRequest>()
-            "Request sent".pq()
             val token = loginRequest.attemptLogin()
             val user = Database.userDB.get(loginRequest.id)
             if (token == null || user == null) {
-
                call.respond(HttpStatusCode.Forbidden)
-               "Forbidden".pq()
                return@post
             }
-
             call.sessions.set("login-session", UserSession(loginRequest.id, token))
             call.respond(HttpStatusCode.OK, user.public()) //Changed to public method
-            "Logged in".pq()
          }
 
          post("logout") {

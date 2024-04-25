@@ -25,8 +25,14 @@ const val urlStem = "http://localhost:8080"
 fun String.url() = "$urlStem/$this"
 private var user: UserRequest? = null
 
+
+
+
+/**
+ * The user that is currently logged in
+ */
 fun setUser(u: UserRequest) {
-   user = u.pq("USER")
+   user = u
 }
 
 fun getUser() = user ?: throw NotImplementedError("Weird buddy")

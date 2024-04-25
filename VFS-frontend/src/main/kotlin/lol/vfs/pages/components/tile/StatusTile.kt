@@ -29,7 +29,7 @@ fun StatusTile(
 ) {
    var selection by remember { mutableStateOf(selected) }
    Row(Modifier.padding(2.dp).background(
-         if (if (selfControl) selection else selected) Color.Red else ColorPallet.BACKGROUNDS.c
+         if (if (selfControl) selection else selected) Color.Red else ColorPallet.BG_B.color
       ).fillMaxWidth().height(40.dp).clickable {
 
          selection = !selection
@@ -44,9 +44,9 @@ fun StatusTile(
    ) {
       if (showStatus) {
          Row {
-            test.i()
+            test.image()
             3.w()
-            approved.i()
+            approved.image()
          }
          10.w()
       }

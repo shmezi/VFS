@@ -11,9 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.runBlocking
-import lol.vfs.LocalCache
-import lol.vfs.assets.Status
 import lol.vfs.model.users.Student
 import lol.vfs.extensions.*
 import lol.vfs.pages.components.button.ButtonSwitch
@@ -21,74 +18,76 @@ import lol.vfs.pages.components.panel.parent.ParentReminderMessage
 import lol.vfs.pages.components.layout.table.TRow
 import lol.vfs.pages.components.layout.table.TTable
 import lol.vfs.pages.components.tile.StudentTile
+import lol.vfs.pages.user.parent.Parent.selectedKid
 import lol.vfs.styling
 
-
+/**
+ * The homepage for parents
+ * @param kids The list of kids that are assigned to given parent
+ */
 @Composable
 fun RowScope.HomePage(
    kids: SnapshotStateList<Student>,
-   markAll: Boolean,
-   kid: MutableState<Student?>,
-   dialog: MutableState<Boolean>
-) {
-   var kid by kid
-   var dialog by dialog
-
-
-   Column(modifier = Modifier.weight(4f)) {
-      kid ?: return@Column
-      var state by remember { mutableStateOf(true) }
-      Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-         Text(style = styling, overflow = TextOverflow.Ellipsis,text = "תיק רפואי", fontSize = 45.sp)
-      }
-      5.h()
-      Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
-         ButtonSwitch {
-            state = it
-         }
-      }
-
-
-
-
-      Column {
-         TTable(
-            if (state)
-               TRow("המלצות רופא", "תאריך בדיקה", "שם")
-            else
-               TRow("המלצות רופא", "תוצאה", "תאריך קבלת החיסון", "שם"),
-            * (if (state) kid.rowifyTreatments() else kid.rowifyTests())
-         )
-      }
-
-
-   }
-   5.w()
-   Column(modifier = Modifier.weight(3f)) {
-      kid ?: return@Column
-      ParentReminderMessage((kid?.treatmentStatus() == Status.APPROVED) || markAll) {
-         dialog = !dialog
-      }
-      TTable(
-         TRow("אישור", "סוג", "ילד", "תאריך"),
-         *kid.rowifyApproval(false),
-         hModifier = Modifier.height(40.dp),
-         rModifier = Modifier.height(30.dp),
-      )
-   }
-   Column(
-      modifier = Modifier.weight(2f),
-      horizontalAlignment = Alignment.CenterHorizontally
    ) {
-      Text(style = styling, overflow = TextOverflow.Ellipsis,text = "ילדים", fontSize = 30.sp)
-      Column(Modifier.fillMaxSize().weight(3f).verticalScroll(rememberScrollState())) {
-         kids.forEach {
-            StudentTile(it.grade, it.clazz, it, kid) { s ->
-               kid = s
+   var selectedKid by selectedKid
+
+   //Selected kid/student info
+
+   Row(modifier = Modifier.weight(0.9f)) {
+      Column(modifier = Modifier.weight(4f)) {
+         selectedKid ?: return@Column
+         var state by remember { mutableStateOf(true) }
+         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "תיק רפואי", fontSize = 45.sp)
+         }
+         5.h()
+         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
+            ButtonSwitch {
+               state = it
             }
          }
 
-      }
 
+
+
+         Column {
+            TTable(
+               if (state)
+                  TRow("המלצות רופא", "תאריך בדיקה", "שם")
+               else
+                  TRow("המלצות רופא", "תוצאה", "תאריך קבלת החיסון", "שם"),
+               * (if (state) selectedKid.rowifyTreatments() else selectedKid.rowifyTests())
+            )
+         }
+
+
+      }
+      5.w()
+      Column(modifier = Modifier.weight(3f)) {
+         val k = selectedKid ?: return@Column
+         ParentReminderMessage(k)
+         TTable(
+            TRow("אישור", "סוג", "ילד", "תאריך"),
+            *k.rowifyApproval(false),
+            hModifier = Modifier.height(40.dp),
+            rModifier = Modifier.height(30.dp),
+         )
+      }
+      Column(
+         modifier = Modifier.weight(2f),
+         horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+         Text(style = styling, overflow = TextOverflow.Ellipsis, text = "ילדים", fontSize = 30.sp)
+         Column(Modifier.fillMaxSize().weight(3f).verticalScroll(rememberScrollState())) {
+            for (k in kids) {
+               StudentTile(k, selectedKid, false) {
+                  selectedKid = it
+               }
+            }
+
+
+         }
+
+      }
    }
 }

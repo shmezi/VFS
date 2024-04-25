@@ -9,13 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import kotlinx.coroutines.runBlocking
 import lol.vfs.assets.ColorPallet
 import lol.vfs.assets.ColorPallet.Companion.bg
 import lol.vfs.assets.Status
 import lol.vfs.extensions.status
 import lol.vfs.extensions.w
-import lol.vfs.getUser
 import lol.vfs.model.users.Student
 import lol.vfs.pages.components.button.ButtonSwitch
 import lol.vfs.pages.components.layout.PageLayout
@@ -32,12 +30,11 @@ object Admin : Screen {
    override fun Content() {
       val studentState = remember { mutableStateOf<Student?>(null) }
       val student by studentState
-      PageLayout(runBlocking { getUser() }) {
+      PageLayout {
          Row(
-            Modifier.fillMaxSize().bg(ColorPallet.BACKGROUNDP)
+            Modifier.fillMaxSize().bg(ColorPallet.BG_A)
          ) {
 
-            SelectionPanel(studentState)
 
             //Student info panel
             Column(Modifier.weight(2f).fillMaxHeight(), horizontalAlignment = Alignment.End) {
@@ -59,7 +56,7 @@ object Admin : Screen {
                   TRow("סטטוס", "שם טיפול"),
                   *mapping.map {
                      TRow(
-                        { it.value.i() },
+                        { it.value.image() },
                         { Text(style = styling, overflow = TextOverflow.Ellipsis, text = it.key) })
                   }.toTypedArray(),
                   gModifier = Modifier.padding(5.dp),
@@ -67,7 +64,7 @@ object Admin : Screen {
                   rModifier = Modifier.height(30.dp),
                )
             }
-
+            SelectionPanel(studentState)
          }
       }
 

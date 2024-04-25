@@ -5,13 +5,11 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import lol.vfs.lib.printing.pq
-import lol.vfs.model.StudyData
+import lol.vfs.model.medical.learning.LearningMaterial
 import lol.vfs.model.organizational.Grade
 import lol.vfs.model.users.*
-import lol.vfs.requests.LoginRequest
 import kotlin.collections.Collection
 import kotlin.collections.Set
-import kotlin.collections.forEach
 import kotlin.collections.mutableMapOf
 import kotlin.collections.mutableSetOf
 import kotlin.collections.set
@@ -19,12 +17,14 @@ import kotlin.collections.setOf
 
 object LocalCache {
    private val students = mutableMapOf<String, Student>()
-   private val grades = mutableMapOf<String, Grade>()
-   val studentGrade = mutableMapOf<String, String>()
-   val studentClazz = mutableMapOf<String, String>()
+   private val grades = mutableMapOf<Int, Grade>()
+
    val studyData = runBlocking {
-      client.get("studyData".url()) .body<Set<StudyData>>()
+      client.get("studyData".url()).body<Set<LearningMaterial>>()
    }
+
+
+
 
    suspend fun cacheStudent(id: String): Student {
       val student = client.get("student".url()) {
@@ -56,35 +56,28 @@ object LocalCache {
       students
    }
 
-   suspend fun cacheGrade(id: String): Grade {
+   suspend fun cacheGrade(id: Int): Grade {
       val grade = client.get("grade".url()) {
          setBody(id)
-
+         contentType(ContentType.Application.Json)
       }.body<Grade>()
-      grade.classes.forEach { clazz ->
-         clazz.students.forEach {
-            studentGrade[it] = grade.id
-            studentClazz[it] = clazz.id
-         }
-      }
       grades[id] = grade
       return grade
    }
 
-   suspend fun getGrade(id: String): Grade {
+   suspend fun getGrade(id: Int): Grade {
       return grades[id] ?: cacheGrade(id)
    }
 
-   fun getGrades(collection: Collection<String>) =
-      runBlocking {
+   fun getGrades(collection: Collection<Int>) = runBlocking {
          val grades = mutableSetOf<Grade>()
          for (c in collection)
             grades.add(getGrade(c))
-         grades.pq("Grades")
+         grades //Return value
       }
 
 
-   suspend fun getGradeIds(): Set<String> {
+   suspend fun getGradeIds(): Set<Int> {
       val user = getUser()
       return when (user.type) {
          UserType.DOCTOR -> client.get("doctor".url()) { setBody(user.id) }.body<Doctor>().grades

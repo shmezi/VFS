@@ -10,37 +10,41 @@ import androidx.compose.ui.unit.dp
 
 /**
  * Status icons for the status of various tests
+ * @param description A short description of the meaning of the icons
  */
-enum class Status(private val image: String, val description: String) {
+enum class Status(val description: String) {
    /**
     * Indicating that a test has been done / vaccine given etc.
     */
-   DONE("done", "מסוים"),
+   DONE("סוים"),
 
    /**
     * Indicates the parent has not responded / denied the given treatment/test
     */
-   DENIED("denied", "לא מאושר"),
+   DENIED("לא אושר"),
 
    /**
     * Indicates the parent has approved the given treatment/test
     */
-   APPROVED("approved", "מאושר"),
+   APPROVED("אושר"),
 
    /**
     * Indication for classes indicating that some of the students have approved and others havent
     */
-   PARTIAL("partial", "חלקית מאושר");
+   PARTIAL("חלקית אושר");
+
+   private val imageName = name.lowercase()
 
    @Composable
-   fun r() = painterResource("assets/status/$image.png")
+   private fun resource() = painterResource("assets/status/$imageName.png")
 
    @Composable
-   fun i() = Image(r(), description, contentScale = ContentScale.Fit, modifier = Modifier.size(20.dp))
+
+   fun image() = Image(resource(), description, contentScale = ContentScale.Fit, modifier = Modifier.size(20.dp))
 
    companion object {
       @Composable
-      fun Boolean.status() = (if (this) Status.APPROVED else Status.DENIED)
+      fun Boolean.status() = (if (this) APPROVED else DENIED)
    }
 }
 

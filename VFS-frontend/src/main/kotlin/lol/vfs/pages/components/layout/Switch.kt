@@ -2,5 +2,8 @@ package lol.vfs.pages.components.layout
 
 import androidx.compose.runtime.Composable
 
+/**
+ * Switches between two items based on given boolean type
+ */
 @Composable
-fun <T> Switch(switch: Boolean, t: T, f: T) = if (switch) t else f
+fun <T> Boolean.Switch(t: T, f: T) = if (this) t else f

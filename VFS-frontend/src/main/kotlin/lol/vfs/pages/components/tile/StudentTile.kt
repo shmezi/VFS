@@ -17,12 +17,12 @@ import androidx.compose.ui.unit.sp
 import lol.vfs.assets.ColorPallet
 import lol.vfs.model.users.Student
 import lol.vfs.extensions.*
+import lol.vfs.lib.gimatria.GimatriaConverter.toGimatria
+import lol.vfs.lib.printing.pq
 import lol.vfs.styling
 
 @Composable
 fun StudentTile(
-   gradeID: String,
-   clazzID: String,
    student: Student,
    selected: Student?,
    showStatus: Boolean = true,
@@ -31,7 +31,7 @@ fun StudentTile(
    Row(
       Modifier
          .padding(2.dp)
-         .background(if (selected == student) Color.Red else ColorPallet.BACKGROUNDS.c)
+         .background(if (selected == student) Color.Red else ColorPallet.BG_B.color)
          .clickable {
             onClick(student)
          }
@@ -47,18 +47,28 @@ fun StudentTile(
          horizontalAlignment = Alignment.CenterHorizontally,
          verticalArrangement = Arrangement.Center
       ) {
-         Text(style = styling, overflow = TextOverflow.Ellipsis,text="${clazzID}/${gradeID}")
+         Text(
+            style = styling,
+            overflow = TextOverflow.Ellipsis,
+            text = "${student.grade.toGimatria()}/${student.clazz}"
+         )
          3.h()
          if (showStatus)
             Row {
-               student.testStatus().i()
+               student.testStatus().image()
                3.w()
-               student.treatmentStatus().i()
+               student.treatmentStatus().image()
             }
       }
       Column(Modifier.weight(7f), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.End) {
-         Text(style = styling, overflow = TextOverflow.Ellipsis,text="${student.name} ${student.lastName}", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-         Text(style = styling, overflow = TextOverflow.Ellipsis,text=student.id)
+         Text(
+            style = styling,
+            overflow = TextOverflow.Ellipsis,
+            text = "${student.name} ${student.lastName}",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold
+         )
+         Text(style = styling, overflow = TextOverflow.Ellipsis, text = student.id)
       }
 
    }

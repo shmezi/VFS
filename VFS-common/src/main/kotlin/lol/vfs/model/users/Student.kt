@@ -1,9 +1,8 @@
 package lol.vfs.model.users
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import lol.vfs.model.testing.TestResult
-import lol.vfs.model.testing.TreatmentData
+import lol.vfs.model.medical.TestData
+import lol.vfs.model.medical.TreatmentData
 import org.bson.codecs.pojo.annotations.BsonId
 
 /**
@@ -19,9 +18,22 @@ data class Student(
    @BsonId
    val id: String,
    var name: String,
-   var grade: String,
-   var clazz: String,
    var lastName: String,
-   var tests: MutableMap<String, TestResult>,
+   var grade: Int,
+   var clazz: Int,
+   var tests: MutableMap<String, TestData>,
    var treatments: MutableMap<String, TreatmentData>
-)
+) {
+   /**
+    * Approve all the treatments and tests
+    */
+   fun approveAll() {
+      tests.values.forEach {
+         it.approved = true
+      }
+      treatments.values.forEach {
+         it.approved = true
+      }
+   }
+
+}

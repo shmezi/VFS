@@ -11,6 +11,7 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
@@ -24,12 +25,13 @@ import kotlinx.coroutines.runBlocking
 import lol.vfs.*
 import lol.vfs.assets.ColorPallet
 import lol.vfs.model.users.UserType
-import lol.vfs.lib.printing.pq
 import lol.vfs.pages.user.Admin
 import lol.vfs.pages.user.doctor.Doctor
 import lol.vfs.pages.user.parent.Parent
 import lol.vfs.requests.LoginRequest
 import lol.vfs.requests.UserRequest
+import java.util.Timer
+import kotlin.concurrent.timerTask
 
 object Login : Screen {
 
@@ -37,27 +39,32 @@ object Login : Screen {
    @Composable
    override fun Content() {
       MaterialTheme {
-
          Column(
-            modifier = Modifier.fillMaxSize().background(ColorPallet.BACKGROUNDS.c),
+            modifier = Modifier.fillMaxSize().background(ColorPallet.BG_B.color),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
+         ) {
 
-            ) {
 
-            Text(style = styling, overflow = TextOverflow.Ellipsis,text="Login", fontSize = 45.sp)
+            var error by remember { mutableStateOf("") }
 
-            var username by remember { mutableStateOf("Shmezi") }
-            var password by remember { mutableStateOf("Shmezi") }
+            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "התחברות", fontSize = 45.sp)
+            Text(style = styling, overflow = TextOverflow.Ellipsis, text = error, color = Color.Red, fontSize = 25.sp)
+            var username by remember { mutableStateOf("") }
+            var password by remember { mutableStateOf("") }
 
             TextField(username, {
                username = it
             }, placeholder = {
-               Text(style = styling, overflow = TextOverflow.Ellipsis,text="Username")
+               Text(style = styling, overflow = TextOverflow.Ellipsis, text = "תעודת זהות")
             })
-            TextField(password, {
-               password = it
-            }, placeholder = { Text(style = styling, overflow = TextOverflow.Ellipsis,text="Password") }, visualTransformation = PasswordVisualTransformation()
+            TextField(
+               password,
+               {
+                  password = it
+               },
+               placeholder = { Text(style = styling, overflow = TextOverflow.Ellipsis, text = "סיסמה") },
+               visualTransformation = PasswordVisualTransformation()
             )
             val navigator = LocalNavigator.currentOrThrow
             Button({
@@ -66,10 +73,12 @@ object Login : Screen {
                      contentType(ContentType.Application.Json)
                      setBody(LoginRequest(username, password))
                   }
-                  setUser(call.body<UserRequest>())
+
+
                   val status = call.status
 
                   if (status == HttpStatusCode.OK) {
+                     setUser(call.body<UserRequest>())
                      navigator.push(
                         when (getUser().type) {
                            UserType.ADMIN -> Admin
@@ -77,17 +86,26 @@ object Login : Screen {
                            UserType.DOCTOR -> Doctor
                         }
                      )
-
-                     return@runBlocking
                   } else {
-                     "No login".pq()
+                     error = "שם משתמש או סיסמה שהוזנו אינם נכונים"
+                     Timer().schedule(timerTask {
+                        error = ""
+                     }, 3000L)
+                     return@runBlocking
                   }
+
 
                }
             }) {
-               Text(style = styling, overflow = TextOverflow.Ellipsis,text="Login")
+               Text(style = styling, overflow = TextOverflow.Ellipsis, text = "התחבר")
             }
-            Button({ navigator.push(Register) }) { Text(style = styling, overflow = TextOverflow.Ellipsis,text="Register") }
+            Button({ navigator.push(Register) }) {
+               Text(
+                  style = styling,
+                  overflow = TextOverflow.Ellipsis,
+                  text = "צור משתמש חדש"
+               )
+            }
 
          }
       }

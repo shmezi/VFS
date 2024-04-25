@@ -1,5 +1,6 @@
 package lol.vfs.lib.db
 
+import com.mongodb.client.model.EstimatedDocumentCountOptions
 import com.mongodb.client.model.Filters.eq
 import kotlinx.coroutines.flow.firstOrNull
 import lol.vfs.lib.printing.pq
@@ -9,6 +10,7 @@ class CachedCollection<T : Any, TID : Any>(private val type: Class<T>, val name:
    private val collection = db.mongo.getCollection(name, type)
    private val cached = mutableMapOf<TID, T>()
    private val toUpdate = mutableSetOf<TID>()
+
    private var getID: ((item: T) -> TID) = { throw NotImplementedError("No @ID Annotation present!") }
    private var defaultValue: ((TID) -> T) = { throw NotImplementedError("Default value not set") }
 
@@ -18,6 +20,7 @@ class CachedCollection<T : Any, TID : Any>(private val type: Class<T>, val name:
 
    fun idOf(t: T) = getID(t)
 
+   suspend fun isEmpty(): Boolean = collection.estimatedDocumentCount(EstimatedDocumentCountOptions()) == 0L
 
    fun CachedCollection<T, TID>.default(scope: (TID) -> T) {
       defaultValue = scope
@@ -38,6 +41,7 @@ class CachedCollection<T : Any, TID : Any>(private val type: Class<T>, val name:
    suspend fun replace(id: TID, item: T) {
       cached[id] = item
       toUpdate.add(id)
+      collection.replaceOne(eq("_id", id), item)
       //Add item to the cache plus add to the to update list
    }
 
@@ -51,6 +55,28 @@ class CachedCollection<T : Any, TID : Any>(private val type: Class<T>, val name:
 //      collection.insertOne(db.serialize<T, TID>(newItem) as BsonDocument)
       collection.insertOne(newItem)
       return newItem
+   }
+
+   suspend fun insertOne(item: T) {
+      collection.insertOne(item)
+   }
+
+   suspend fun insertMany(vararg items: T) {
+      collection.insertMany(items.toList())
+   }
+
+   suspend fun getAll(): MutableList<T> {
+      val values = mutableListOf<T>()
+
+      collection.find().collect {
+         val id = idOf(it)
+         if (!cached.contains(id))
+            cached[id] = it
+         values.add(it)
+
+
+      }
+      return values
    }
 
 }

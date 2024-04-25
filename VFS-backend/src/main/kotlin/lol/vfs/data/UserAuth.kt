@@ -2,7 +2,6 @@ package lol.vfs.data
 
 import lol.vfs.AuthValidation.bakeCookie
 import lol.vfs.AuthValidation.checkPassword
-import lol.vfs.lib.printing.pq
 import lol.vfs.model.users.User
 import lol.vfs.model.users.UserType
 import lol.vfs.requests.LoginRequest
@@ -31,14 +30,12 @@ object UserAuth {
     * Generate a new token if the [LoginRequest] credentials are correct
     */
    suspend fun LoginRequest.attemptLogin(): String? {
-      "Attempted login!".pq()
-      this.pq("USER")
+
       val user = users.get(id) ?: return null
-      "User exists!".pq()
 
       val valid = checkPassword(user.pwd, password)
       if (!valid) return null
-      "Valid password".pq()
+
       val cookie = bakeCookie()
       user.validTokens.add(cookie)
       return cookie
@@ -62,7 +59,7 @@ object UserAuth {
          name = user.name
          lastName = user.lastName
          type = user.type
-         image = user.image
+
       }
 
    }

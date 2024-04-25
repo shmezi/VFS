@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import lol.vfs.LocalCache
+import lol.vfs.lib.gimatria.GimatriaConverter.toGimatria
 import lol.vfs.model.users.Student
 import lol.vfs.pages.components.tile.StudentTile
 
@@ -16,8 +17,6 @@ fun StudentSelectionPanel(
    var student by selectedStudent
    students.forEach {
       StudentTile(
-         gradeID = LocalCache.studentGrade[it.id]!!,
-         clazzID = LocalCache.studentClazz[it.id]!!,
          student = it,
          selected = selectedStudent.value,
          showStatus = showStatus

@@ -21,13 +21,12 @@ fun RowScope.SelectionPanel(
 ) {
    val classes = remember { mutableStateListOf<Class>() }
    val students = remember { mutableStateListOf<Student>() }
-   runBlocking {
 
-   }
-   //Grade panels
-   DColumn(gWeight) { GradeSelectionPanel(classes, selected, students, showStatus = showStatus) }
-   //Class panels
-   DColumn(cWeight) { ClassSelectionPanel(classes, selected, students, showStatus = showStatus) }
    //Student panels
    DColumn(sWeight) { StudentSelectionPanel(selected, students, showStatus = showStatus) }
+   //Class panels
+   DColumn(cWeight) { ClassSelectionPanel(classes, selected, students, showStatus = showStatus) }
+
+   //Grade panels
+   DColumn(gWeight) { GradeSelectionPanel(classes, selected, students, showStatus = showStatus) }
 }

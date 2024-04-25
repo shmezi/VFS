@@ -1,7 +1,6 @@
 package lol.vfs.pages.components.panel.parent
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
@@ -13,27 +12,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import lol.vfs.model.StudyData
 import lol.vfs.extensions.h
 import lol.vfs.extensions.studyImage
-import lol.vfs.pages.components.layout.DialogPupUp
+import lol.vfs.model.medical.learning.LearningMaterial
 import lol.vfs.styling
 
 @Composable
-fun LearningPanel(data: StudyData, onClick: (StudyData) -> Unit) {
+fun LearningPanel(data: LearningMaterial) {
 
    Column(
       Modifier
-         .width(250.dp)
+         .width(550.dp)
          .fillMaxHeight()
          .padding(5.dp)
          .border(1.dp, Color.Black, RoundedCornerShape(10.dp))
