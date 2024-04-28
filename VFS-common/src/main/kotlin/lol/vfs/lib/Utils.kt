@@ -5,3 +5,5 @@ fun String?.textOrNull(): String? {
       return null
    return this
 }
+
+fun <T>r(returnable: () -> T)  : T = returnable()

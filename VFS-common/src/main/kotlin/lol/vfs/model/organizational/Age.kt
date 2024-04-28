@@ -71,7 +71,7 @@ enum class Age(val value: Int) {
    /**
     * After school
     */
-   AFTER(12),
+   AFTER(13),
 
    /**
     * Before school

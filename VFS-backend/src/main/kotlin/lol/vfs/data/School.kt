@@ -1,7 +1,11 @@
 package lol.vfs.data
 
+import lol.vfs.lib.Date
 import lol.vfs.lib.printing.pq
 import lol.vfs.model.medical.Medical
+import lol.vfs.model.medical.MedicalType
+import lol.vfs.model.medical.TestData
+import lol.vfs.model.medical.TreatmentData
 import lol.vfs.model.medical.learning.LearningMaterial
 import lol.vfs.model.organizational.Grade
 import lol.vfs.model.users.Admin
@@ -23,14 +27,38 @@ object School {
       return true
    }
 
-   fun studyData(): Set<LearningMaterial> = LearnCenterData.entries.map { it.learningMaterial }.toSet()
-   suspend fun assignCurrentYear(vararg grades: Grade) {
-      for (grade in grades) {
-         val all = Database.medicalDb.getAll().pq("ALL!")
-         val medicals = all.filter { it.grade == grade.getAge() }
-         for (med in medicals) {
+   suspend fun updateGrade(grade: Grade): Boolean {
+      Database.gradeDB.replace(grade.id, grade)
+      return true
+   }
 
+   fun studyData(): Set<LearningMaterial> = LearnCenterData.entries.map { it.learningMaterial }.toSet()
+
+   fun s() {
+   }
+
+   suspend fun assignCurrentYear(vararg grades: Grade) {
+      val all = Database.medicalDb.getAll()
+      for (grade in grades) {
+         val medicals = all.filter { it.grade.pq("grade") == grade.getAge().pq("age") }.pq()
+         val students = grade.getStudents().map { getStudent(it) }.filterNotNull().pq()
+         for (medical in medicals) {
+            val date = Date(2024, 12, 0)
+            grade.medicals[medical.name] = date
+            if (medical.type == MedicalType.TEST) {
+               for (student in students) {
+                  student.tests[medical.name] = TestData(medical.name)
+               }
+               continue
+            }
+            for (student in students) {
+               student.treatments[medical.name] = TreatmentData(medical.name.pq())
+            }
          }
+         for (s in students) {
+            updateStudent(s)
+         }
+         updateGrade(grade)
       }
    }
 
@@ -41,6 +69,3 @@ object School {
    }
 }
 
-class S{
-
-}

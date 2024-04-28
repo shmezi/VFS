@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 import lol.vfs.lib.Date
 import lol.vfs.lib.db.Database
 import lol.vfs.lib.gimatria.GimatriaConverter.toGimatria
+import lol.vfs.lib.printing.pq
+import lol.vfs.model.users.Student
 import lol.vfs.utils.schoolBirth
 import org.bson.codecs.pojo.annotations.BsonId
 
@@ -18,18 +20,39 @@ data class Grade(
    @BsonId
    val id: Int,
    var startYear: Int,
-   var classes: MutableMap<String, Class>
+   val classes: MutableMap<String, Class>,
+   val medicals: MutableMap<String, Date> = mutableMapOf()
 ) {
    /**
     * Calculates the age of the students
     * @return The age that the students are currently at
     */
    fun getAge(): Age {
-      val s = Date.today() - startYear
+      val s = (Date.today() - startYear) + 1
+      "Current age: $s which is ${Age.entries[s - 1]}".pq()
+
       if (s > 12) return Age.AFTER
       if (s < 1) return Age.BEFORE
-      return Age.entries[s]
+      return Age.entries[s - 1]
    }
+
+   /**
+    * Gets all the classes assigned to the grade
+    */
+   fun getClasses() = classes.values
+
+   /**
+    * Gets all the students assigned to the grade
+    * @return A list of the IDs of the students
+    */
+   fun getStudents(): List<String> {
+      val students = mutableListOf<String>()
+      for (clazz in getClasses()) {
+         students.addAll(clazz.students)
+      }
+      return students
+   }
+
 
    /**
     * Pretty print version of the year of the grade in gimatria.

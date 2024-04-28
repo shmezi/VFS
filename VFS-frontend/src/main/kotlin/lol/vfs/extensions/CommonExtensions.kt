@@ -74,6 +74,7 @@ fun Student?.rowifyApproval(status: Boolean): Array<TRow> {
 
    val rows = mutableListOf<TRow>()
    val s = this ?: return rows.toTypedArray()
+
    for (test in tests) {
       rows.add(
          TRow(
@@ -92,7 +93,16 @@ fun Student?.rowifyApproval(status: Boolean): Array<TRow> {
             },
             { Text(style = styling, overflow = TextOverflow.Ellipsis, text = test.key) },
             { Text(style = styling, overflow = TextOverflow.Ellipsis, text = name) },
-            { Text(style = styling, overflow = TextOverflow.Ellipsis, text = test.value.date.toString()) })
+            {
+               Text(
+                  style = styling, overflow = TextOverflow.Ellipsis, text =
+                  runBlocking {
+                     LocalCache.getGrade(s.grade).medicals[test.key]
+                  }.toString()
+               )
+
+
+            })
       )
    }
    for (treatment in treatments) {
@@ -112,7 +122,13 @@ fun Student?.rowifyApproval(status: Boolean): Array<TRow> {
             },
             { Text(style = styling, overflow = TextOverflow.Ellipsis, text = treatment.key) },
             { Text(style = styling, overflow = TextOverflow.Ellipsis, text = name) },
-            { Text(style = styling, overflow = TextOverflow.Ellipsis, text = treatment.value.date.toString()) })
+            {
+               Text(style = styling, overflow = TextOverflow.Ellipsis, text =
+               runBlocking {
+                  LocalCache.getGrade(s.grade).medicals[treatment.key]
+               }.toString()
+               )
+            })
       )
    }
 
@@ -128,43 +144,48 @@ fun Student?.rowifyDocTests(): Array<TRow> {
    for (t in tests) {
       var complete by mutableStateOf(t.value.isComplete())
 
-      rows.add(TRow({
-         var u by remember { mutableStateOf(t.value.recommendations ?: "") }
+      rows.add(TRow(
+         {
+            var u by remember { mutableStateOf(t.value.recommendations ?: "") }
 
-         TextField(u, {
-            u = it
-            t.value.recommendations = it.textOrNull()
-            runBlocking { LocalCache.postToCloud(s.id) }
-            complete = (t.value.results != null || t.value.recommendations != null)
-
-         }, enabled = t.value.approved, label = {
-            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "המלצה")
-         })
-      }, {
-         var text by remember { mutableStateOf(t.value.results ?: "") }
-
-         TextField(
-            value = text,
-            onValueChange = {
-               text = it
-               t.value.results = it.textOrNull()
+            TextField(u, {
+               u = it
+               t.value.recommendations = it.textOrNull()
+               runBlocking { LocalCache.postToCloud(s.id) }
                complete = (t.value.results != null || t.value.recommendations != null)
-               runBlocking { LocalCache.postToCloud(s.id) }
-            },
-            enabled = t.value.approved,
-            label = { Text(style = styling, overflow = TextOverflow.Ellipsis, text = "תוצאה") })
-      }, {
-         Checkbox(complete, {
-            if (t.value.results.textOrNull() == null && t.value.recommendations.textOrNull() == null) {
-               complete = !complete
-               if (complete) {
-                  t.value.results = ""
-               } else t.value.results = null
-               runBlocking { LocalCache.postToCloud(s.id) }
-            }
 
-         }, enabled = t.value.approved)
-      }, { t.value.approved.status().image() }, { Text(style = styling, overflow = TextOverflow.Ellipsis, text = t.key) }
+            }, enabled = t.value.approved, label = {
+               Text(style = styling, overflow = TextOverflow.Ellipsis, text = "המלצה")
+            })
+         },
+         {
+            var text by remember { mutableStateOf(t.value.results ?: "") }
+
+            TextField(
+               value = text,
+               onValueChange = {
+                  text = it
+                  t.value.results = it.textOrNull()
+                  complete = (t.value.results != null || t.value.recommendations != null)
+                  runBlocking { LocalCache.postToCloud(s.id) }
+               },
+               enabled = t.value.approved,
+               label = { Text(style = styling, overflow = TextOverflow.Ellipsis, text = "תוצאה") })
+         },
+         {
+            Checkbox(complete, {
+               if (t.value.results.textOrNull() == null && t.value.recommendations.textOrNull() == null) {
+                  complete = !complete
+                  if (complete) {
+                     t.value.results = ""
+                  } else t.value.results = null
+                  runBlocking { LocalCache.postToCloud(s.id) }
+               }
+
+            }, enabled = t.value.approved)
+         },
+         { t.value.approved.status().image() },
+         { Text(style = styling, overflow = TextOverflow.Ellipsis, text = t.key) }
 
       ))
    }
@@ -181,29 +202,33 @@ fun Student?.rowifyDocTreatments(): Array<TRow> {
    for (t in treatments) {
       var complete by mutableStateOf(t.value.isComplete())
 
-      rows.add(TRow({
-         var u by remember { mutableStateOf(t.value.afterEffects ?: "") }
-         TextField(u, {
-            u = it
-            t.value.afterEffects = it.textOrNull()
-            complete = t.value.afterEffects != null
-            runBlocking { LocalCache.postToCloud(s.id) }
-         }, enabled = t.value.approved, label = {
-            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "תופאות לוואי")
-         })
-      }, {
-         Checkbox(complete, {
-
-            if (t.value.afterEffects.textOrNull() == null) {
-               complete = !complete
-               if (complete) {
-                  t.value.afterEffects = ""
-               } else t.value.afterEffects = null
+      rows.add(TRow(
+         {
+            var u by remember { mutableStateOf(t.value.afterEffects ?: "") }
+            TextField(u, {
+               u = it
+               t.value.afterEffects = it.textOrNull()
+               complete = t.value.afterEffects != null
                runBlocking { LocalCache.postToCloud(s.id) }
+            }, enabled = t.value.approved, label = {
+               Text(style = styling, overflow = TextOverflow.Ellipsis, text = "תופאות לוואי")
+            })
+         },
+         {
+            Checkbox(complete, {
 
-            }
-         }, enabled = t.value.approved)
-      }, { t.value.approved.status().image() }, { Text(style = styling, overflow = TextOverflow.Ellipsis, text = t.key) }
+               if (t.value.afterEffects.textOrNull() == null) {
+                  complete = !complete
+                  if (complete) {
+                     t.value.afterEffects = ""
+                  } else t.value.afterEffects = null
+                  runBlocking { LocalCache.postToCloud(s.id) }
+
+               }
+            }, enabled = t.value.approved)
+         },
+         { t.value.approved.status().image() },
+         { Text(style = styling, overflow = TextOverflow.Ellipsis, text = t.key) }
 
       ))
    }
@@ -215,10 +240,12 @@ fun Student?.rowifyDocTreatments(): Array<TRow> {
 @Composable
 fun Student?.rowifyTests(): Array<TRow> {
    val rows = mutableListOf<TRow>()
-   this ?: return rows.toTypedArray()
+   val s = this ?: return rows.toTypedArray()
    for (test in tests) {
       val v = test.value
-      rows.add(TRow(v.recommendations, v.results, v.date.toString(), test.key))
+      rows.add(TRow(v.recommendations, v.results, runBlocking {
+         LocalCache.getGrade(s.grade).medicals[test.key]
+      }.toString(), test.key))
    }
    return rows.toTypedArray()
 }
@@ -226,10 +253,12 @@ fun Student?.rowifyTests(): Array<TRow> {
 @Composable
 fun Student?.rowifyTreatments(): Array<TRow> {
    val rows = mutableListOf<TRow>()
-   this ?: return rows.toTypedArray()
+   val s = this ?: return rows.toTypedArray()
    for (treatment in treatments) {
       val v = treatment.value
-      rows.add(TRow(v.afterEffects, v.date.toString(), treatment.key))
+      rows.add(TRow(v.afterEffects, runBlocking {
+         LocalCache.getGrade(s.grade).medicals[treatment.key]
+      }.toString(), treatment.key))
    }
    return rows.toTypedArray()
 }

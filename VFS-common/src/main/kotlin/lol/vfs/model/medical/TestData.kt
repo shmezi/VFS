@@ -5,17 +5,17 @@ import lol.vfs.lib.Date
 
 /**
  * The test data of a student
+ * @param id The ID of the [Medical] that this data refers to.
  * @param approved Weather this test is approved by the parent for the student
  * @param results The results the doctor has given regarding the test
  * @param recommendations The doctor's recommendations regarding the test
- * @param date The date that the test will be run on
  */
 @Serializable
 data class TestData(
+   val id: String,
    var approved: Boolean = false,
    var results: String? = null,
-   var recommendations: String? = null,
-   var date: Date? = null
+   var recommendations: String? = null
 ) {
    /**
     * Weather the test has been run on the kid or not

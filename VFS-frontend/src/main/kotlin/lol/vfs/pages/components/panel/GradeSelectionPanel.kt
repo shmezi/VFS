@@ -6,7 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import kotlinx.coroutines.runBlocking
-import lol.vfs.LocalCache.getGrade
 import lol.vfs.LocalCache.getGradeIds
 import lol.vfs.LocalCache.getGrades
 import lol.vfs.LocalCache.getStudents

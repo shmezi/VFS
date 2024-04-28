@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import lol.vfs.model.users.Student
 import lol.vfs.extensions.*
 import lol.vfs.pages.components.button.ButtonSwitch
+import lol.vfs.pages.components.button.LinkButton
 import lol.vfs.pages.components.panel.parent.ParentReminderMessage
 import lol.vfs.pages.components.layout.table.TRow
 import lol.vfs.pages.components.layout.table.TTable
@@ -26,14 +27,15 @@ import lol.vfs.styling
  * @param kids The list of kids that are assigned to given parent
  */
 @Composable
-fun RowScope.HomePage(
+fun HomePage(
    kids: SnapshotStateList<Student>,
-   ) {
+) {
    var selectedKid by selectedKid
 
    //Selected kid/student info
 
-   Row(modifier = Modifier.weight(0.9f)) {
+   Row {
+
       Column(modifier = Modifier.weight(4f)) {
          selectedKid ?: return@Column
          var state by remember { mutableStateOf(true) }
@@ -63,9 +65,13 @@ fun RowScope.HomePage(
 
       }
       5.w()
-      Column(modifier = Modifier.weight(3f)) {
+      Column(modifier = Modifier.weight(3f), horizontalAlignment = Alignment.CenterHorizontally) {
          val k = selectedKid ?: return@Column
-         ParentReminderMessage(k)
+         Text("יש גם למלא באטר של משרד הבריאות", fontSize = 32.sp)
+         LinkButton("https://parents.education.gov.il/prhnet/contact-us/confirmations/annual-health-statement") {
+            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "לאישור באתר משרד החינוך")
+         }
+//         ParentReminderMessage(k)
          TTable(
             TRow("אישור", "סוג", "ילד", "תאריך"),
             *k.rowifyApproval(false),
@@ -90,4 +96,5 @@ fun RowScope.HomePage(
 
       }
    }
+
 }

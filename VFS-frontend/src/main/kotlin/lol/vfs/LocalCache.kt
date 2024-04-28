@@ -5,6 +5,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import lol.vfs.lib.printing.pq
+import lol.vfs.model.medical.Medical
 import lol.vfs.model.medical.learning.LearningMaterial
 import lol.vfs.model.organizational.Grade
 import lol.vfs.model.users.*
@@ -22,8 +23,6 @@ object LocalCache {
    val studyData = runBlocking {
       client.get("studyData".url()).body<Set<LearningMaterial>>()
    }
-
-
 
 
    suspend fun cacheStudent(id: String): Student {
@@ -69,12 +68,16 @@ object LocalCache {
       return grades[id] ?: cacheGrade(id)
    }
 
+   fun date(grade: Grade, medical: Medical) {
+
+   }
+
    fun getGrades(collection: Collection<Int>) = runBlocking {
-         val grades = mutableSetOf<Grade>()
-         for (c in collection)
-            grades.add(getGrade(c))
-         grades //Return value
-      }
+      val grades = mutableSetOf<Grade>()
+      for (c in collection)
+         grades.add(getGrade(c))
+      grades //Return value
+   }
 
 
    suspend fun getGradeIds(): Set<Int> {

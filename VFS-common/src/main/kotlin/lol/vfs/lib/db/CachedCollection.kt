@@ -27,6 +27,7 @@ class CachedCollection<T : Any, TID : Any>(private val type: Class<T>, val name:
    }
 
 
+
    suspend fun get(id: TID): T? {
       if (cached.containsKey(id)) return cached[id]
       "[$name] - $id".pq("Cached")

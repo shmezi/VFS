@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -20,7 +19,7 @@ import lol.vfs.pages.components.layout.DialogPupUp
 import lol.vfs.styling
 
 @Composable
-fun Student?.ApprovalDialog(onDissmiss: () -> Unit) {
+fun Student?.ApprovalDialog(approveAll: () -> Unit) {
    val kid = this ?: return
    DialogPupUp {
       Text(
@@ -42,6 +41,7 @@ fun Student?.ApprovalDialog(onDissmiss: () -> Unit) {
             {
                kid.approveAll()
                runBlocking { LocalCache.postToCloud(kid.id) }
+               approveAll()
             },
          ) {
             Text(style = styling, overflow = TextOverflow.Ellipsis, text = "כן, אישרתי הכל!")

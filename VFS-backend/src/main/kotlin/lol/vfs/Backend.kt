@@ -34,9 +34,11 @@ fun Application.module() {
    auth()
    classroom()
    runBlocking {
-       Medical("testing123",MedicalType.TEST,Age.FIRST).register()
-      Medical("testing1",MedicalType.TEST,Age.SECOND).register()
-      assignCurrentYear(getGrade(1)!!)
+      Medical("testing123", MedicalType.TEST, Age.FIRST).register()
+      Medical("testing1", MedicalType.TEST, Age.SECOND).register()
+      for (c in 1 .. 10) {
+         assignCurrentYear(getGrade(c)!!)
+      }
 
       if (!Database.studentDB.isEmpty()) return@runBlocking
       Database.importClassroomData(
