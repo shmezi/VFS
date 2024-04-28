@@ -1,12 +1,13 @@
 package lol.vfs.pages.components.nav
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import lol.vfs.extensions.w
 import lol.vfs.lib.printing.pq
 
 
@@ -30,28 +31,32 @@ class Navigation(private val context: @Composable (Navigation.() -> Unit)) {
 
    @Composable
    fun build() {
-      var page by remember { mutableStateOf<NavIcon?>(null) }
-      if (!hasRunContext) {
-         context()
-         "Context built!".pq()
-         page = icons.getOrNull(0)
-         hasRunContext = true
-      }
-      page?.selectPage?.invoke()
-
-      Column(Modifier.fillMaxHeight().background(Color.Gray)) {
-         if (icons.isEmpty()) return
-         icons.forEach { nav ->
-            IButton(nav, page) {
-               page = it
-               "Clicked a button".pq(nav.description)
+      Row {
+         var page by remember { mutableStateOf<NavIcon?>(null) }
+         if (!hasRunContext) {
+            context()
+            page = icons.getOrNull(0)
+            hasRunContext = true
+         }
+         Column(Modifier.weight(9f).fillMaxSize()) { page?.selectPage?.invoke() }
+         5.w()
+         Column(
+            Modifier.fillMaxHeight(),
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.Top
+         ) {
+            if (icons.isEmpty()) return
+            icons.forEach { nav ->
+               IButton(nav, page) {
+                  page = it
+               }
             }
+
+
          }
 
 
       }
-
-
    }
 }
 

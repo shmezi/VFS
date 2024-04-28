@@ -19,12 +19,17 @@ import lol.vfs.pages.components.layout.table.TTable
 import lol.vfs.styling
 
 @Composable
-fun RowScope.SchedulePage(kids: SnapshotStateList<Student>) {
+fun SchedulePage(kids: SnapshotStateList<Student>) {
    Column(
       horizontalAlignment = Alignment.CenterHorizontally,
-      modifier = Modifier.weight(0.9f)
    ) {
-      Text(style = styling, overflow = TextOverflow.Ellipsis,text = "מועדי בדיקות וחיסונים", fontSize = 40.sp, textAlign = TextAlign.Center)
+      Text(
+         style = styling,
+         overflow = TextOverflow.Ellipsis,
+         text = "מועדי בדיקות וחיסונים",
+         fontSize = 40.sp,
+         textAlign = TextAlign.Center
+      )
       val rows = mutableListOf<TRow>()
       kids.forEach {
          rows.addAll(it.rowifyApproval(true))

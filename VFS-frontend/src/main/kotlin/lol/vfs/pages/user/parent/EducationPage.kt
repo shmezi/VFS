@@ -1,5 +1,6 @@
 package lol.vfs.pages.user.parent
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,10 +16,10 @@ import lol.vfs.pages.components.panel.parent.LearningPanel
 import lol.vfs.styling
 import lol.vfs.utils.LearnCenterData
 
-
+@Preview
 @Composable
-fun RowScope.EducationPage() {
-   Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(0.9f)) {
+fun EducationPage() {
+   Column(horizontalAlignment = Alignment.CenterHorizontally) {
       Text(style = styling, overflow = TextOverflow.Ellipsis, text = "מרכז למידה", fontSize = 50.sp)
       Row(Modifier.horizontalScroll(rememberScrollState(50))) {
          LearnCenterData.entries.map { it.learningMaterial }.toSet().forEach {

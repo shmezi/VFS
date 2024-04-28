@@ -27,7 +27,7 @@ fun LearningPanel(data: LearningMaterial) {
 
    Column(
       Modifier
-         .width(550.dp)
+         .width(350.dp)
          .fillMaxHeight()
          .padding(5.dp)
          .border(1.dp, Color.Black, RoundedCornerShape(10.dp))
