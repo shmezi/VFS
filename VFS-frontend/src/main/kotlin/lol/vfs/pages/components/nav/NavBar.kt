@@ -8,7 +8,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import lol.vfs.extensions.w
-import lol.vfs.lib.printing.pq
 
 
 @Composable

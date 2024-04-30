@@ -1,6 +1,7 @@
 package lol.vfs.pages.user
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateMap
@@ -10,9 +11,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
+import com.darkrockstudios.libraries.mpfilepicker.FilePicker
+import io.ktor.client.request.*
+import io.ktor.http.*
+import kotlinx.coroutines.runBlocking
 import lol.vfs.assets.ColorPallet
 import lol.vfs.assets.ColorPallet.Companion.bg
 import lol.vfs.assets.Status
+import lol.vfs.client
 import lol.vfs.extensions.status
 import lol.vfs.extensions.w
 import lol.vfs.model.users.Student
@@ -23,7 +29,11 @@ import lol.vfs.pages.components.layout.table.TTable
 import lol.vfs.pages.components.nav.Nav
 import lol.vfs.pages.components.panel.SelectionPanel
 import lol.vfs.pages.components.tile.StudentInfoPanel
+import lol.vfs.requests.RegisterRequest
+import lol.vfs.requests.importClassroomData
 import lol.vfs.styling
+import lol.vfs.url
+import java.io.File
 
 
 object Admin : Screen {
@@ -45,7 +55,7 @@ object Admin : Screen {
                   Column(Modifier.weight(2f).fillMaxHeight(), horizontalAlignment = Alignment.End) {
                      val student = student ?: return@Column
                      StudentInfoPanel(student)
-                     var state by remember { mutableStateOf(false) }
+                     var state by remember { mutableStateOf(true) }
 
                      Row {
                         ButtonSwitch {
@@ -54,7 +64,7 @@ object Admin : Screen {
                         5.w()
                      }
                      val mapping: SnapshotStateMap<String, Status> =
-                        if (!state) mutableStateMapOf(*student.tests.map { Pair(it.key, it.value.status()) }
+                        if (state) mutableStateMapOf(*student.tests.map { Pair(it.key, it.value.status()) }
                            .toTypedArray())
                         else mutableStateMapOf(*student.treatments.map { Pair(it.key, it.value.status()) }
                            .toTypedArray())
@@ -81,7 +91,24 @@ object Admin : Screen {
                   verticalArrangement = Arrangement.Top
                ) {
                   Text("כלי מנהל", fontSize = 42.sp)
-                  
+                  var filePicker by remember { mutableStateOf(false) }
+                  Button({
+                     filePicker = true
+                  }) {
+                     Text("פתח קובץ")
+                  }
+                  FilePicker(show = filePicker, fileExtensions = listOf("csv")) { file ->
+                     filePicker = false
+                     val s = importClassroomData(File(file?.path ?: return@FilePicker))
+                     runBlocking {
+                        client.post("import".url()) {
+                           contentType(ContentType.Application.Json)
+                           setBody(s)
+                        }
+                     }
+                  }
+
+
                }
             }
          }

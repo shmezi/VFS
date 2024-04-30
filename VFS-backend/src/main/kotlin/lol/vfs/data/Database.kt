@@ -37,7 +37,7 @@ object Database {
          }
          gradeDB = collection(Grade::class.java, "grade") {
             default {
-               Grade(it, 2020, mutableMapOf())
+               Grade(it, mutableMapOf())
             }
          }
 
@@ -63,7 +63,7 @@ object Database {
                Student(it, "", "", 0, 0, mutableMapOf(), mutableMapOf())
             }
          }
-         medicalDb = collection(Medical::class.java, "test") {
+         medicalDb = collection(Medical::class.java, "medical") {
             default {
                Medical(it, MedicalType.TEST, Age.FIFTH)
             }
@@ -76,42 +76,6 @@ object Database {
          }
 
       }
-   }
-
-   suspend fun importClassroomData(file: File) {
-      if (file.extension != "csv") throw NotImplementedError("File was not a csv!")
-      var x = true
-      val students = mutableListOf<Student>()
-      val grades = mutableMapOf<Int, Grade>()
-      file.forEachLine {
-         if (!x) {
-            val values = it.split(",")
-            fun Int.v() = values[this]
-            fun Int.vi() = values[this].toInt()
-            //Decoded:
-            val id = 0.v()
-            val first = 1.v()
-            val last = 2.v()
-            val grade = 3.vi()
-            val clazz = 4.vi()
-            val startYear = 5.vi()
-            val student = Student(
-               id,
-               first,
-               last,
-               grade,
-               clazz,
-               mutableMapOf(),
-               mutableMapOf()
-            )
-            students.add(student)
-            val g = grades.getOrPut(grade) { Grade(grade, startYear, mutableMapOf()) }
-            g.classes.getOrPut(clazz.toString()) { Class(clazz, g.id, mutableSetOf()) }.students.add(id)
-         } else x = false
-      }
-      studentDB.insertMany(*students.toTypedArray())
-
-      gradeDB.insertMany(*grades.values.toTypedArray())
    }
 
 

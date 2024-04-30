@@ -4,7 +4,6 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
-import lol.vfs.lib.printing.pq
 import lol.vfs.model.medical.Medical
 import lol.vfs.model.medical.learning.LearningMaterial
 import lol.vfs.model.organizational.Grade
@@ -25,13 +24,14 @@ object LocalCache {
    }
 
 
-   suspend fun cacheStudent(id: String): Student {
+   suspend fun cacheStudent(id: String): Student? {
       val student = client.get("student".url()) {
-         this.setBody(id)
-      }.body<Student>()
-      students[id] = student
+         setBody(id)
+      }
+      if (student.status == HttpStatusCode.OK)
+         students[id] = student.body<Student>()
 
-      return student
+      return students[id]
    }
 
    suspend fun postToCloud(student: String) {
@@ -44,27 +44,30 @@ object LocalCache {
    }
 
 
-   suspend fun getStudent(id: String): Student {
+   suspend fun getStudent(id: String): Student? {
       return students[id] ?: cacheStudent(id)
    }
 
    fun getStudents(collection: Collection<String>) = runBlocking {
       val students = mutableSetOf<Student>()
       for (c in collection)
-         students.add(getStudent(c))
+         students.add(getStudent(c)?:continue)
       students
    }
 
-   suspend fun cacheGrade(id: Int): Grade {
+   suspend fun cacheGrade(id: Int): Grade? {
       val grade = client.get("grade".url()) {
          setBody(id)
          contentType(ContentType.Application.Json)
-      }.body<Grade>()
-      grades[id] = grade
-      return grade
+      }
+      val g = if (grade.status == HttpStatusCode.OK)
+         grade.body<Grade>()
+      else null
+      grades[id] = g ?: return null
+      return g
    }
 
-   suspend fun getGrade(id: Int): Grade {
+   suspend fun getGrade(id: Int): Grade? {
       return grades[id] ?: cacheGrade(id)
    }
 
@@ -75,7 +78,7 @@ object LocalCache {
    fun getGrades(collection: Collection<Int>) = runBlocking {
       val grades = mutableSetOf<Grade>()
       for (c in collection)
-         grades.add(getGrade(c))
+         grades.add(getGrade(c) ?: continue)
       grades //Return value
    }
 
@@ -83,8 +86,22 @@ object LocalCache {
    suspend fun getGradeIds(): Set<Int> {
       val user = getUser()
       return when (user.type) {
-         UserType.DOCTOR -> client.get("doctor".url()) { setBody(user.id) }.body<Doctor>().grades
-         UserType.ADMIN -> client.get("admin".url()) { setBody(user.id) }.body<Admin>().grades
+         UserType.DOCTOR -> {
+            val v = client.get("doctor".url()) { setBody(user.id) }
+            if (v.status == HttpStatusCode.OK)
+               v.body<Doctor>().grades
+            else setOf()
+         }
+
+         UserType.ADMIN -> {
+            val v = client.get("admin".url()) { setBody(user.id) }
+            if (v.status == HttpStatusCode.OK)
+               v.body<Admin>().grades
+            else setOf()
+
+
+         }
+
          else -> setOf()
       }
    }
@@ -94,7 +111,9 @@ object LocalCache {
       if (user.type != UserType.PARENT) return setOf()
       val parent = client.get("parent".url()) {
          setBody(user.id)
-      }.body<Parent>().pq()
-      return parent.kids
+      }
+      if (parent.status == HttpStatusCode.OK)
+         return parent.body<Parent>().kids
+      return setOf()
    }
 }

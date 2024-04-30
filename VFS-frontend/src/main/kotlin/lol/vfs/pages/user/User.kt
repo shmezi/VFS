@@ -11,7 +11,6 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
-import lol.vfs.lib.printing.pq
 import lol.vfs.model.organizational.Class
 import lol.vfs.url
 
@@ -29,7 +28,7 @@ object User : Screen {
          val s: Class = c.post("cl".url()) {
             contentType(ContentType.Application.Json)
          }.body()
-         s.pq()
+         s
       }
 
    }

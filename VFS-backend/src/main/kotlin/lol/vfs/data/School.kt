@@ -1,7 +1,6 @@
 package lol.vfs.data
 
 import lol.vfs.lib.Date
-import lol.vfs.lib.printing.pq
 import lol.vfs.model.medical.Medical
 import lol.vfs.model.medical.MedicalType
 import lol.vfs.model.medical.TestData
@@ -40,8 +39,8 @@ object School {
    suspend fun assignCurrentYear(vararg grades: Grade) {
       val all = Database.medicalDb.getAll()
       for (grade in grades) {
-         val medicals = all.filter { it.grade.pq("grade") == grade.getAge().pq("age") }.pq()
-         val students = grade.getStudents().map { getStudent(it) }.filterNotNull().pq()
+         val medicals = all.filter { it.grade == grade.getAge() }
+         val students = grade.getStudents().mapNotNull { getStudent(it) }
          for (medical in medicals) {
             val date = Date(2024, 12, 0)
             grade.medicals[medical.name] = date
@@ -52,7 +51,7 @@ object School {
                continue
             }
             for (student in students) {
-               student.treatments[medical.name] = TreatmentData(medical.name.pq())
+               student.treatments[medical.name] = TreatmentData(medical.name)
             }
          }
          for (s in students) {
@@ -60,12 +59,12 @@ object School {
          }
          updateGrade(grade)
       }
+
    }
 
 
    suspend fun Medical.register() {
-      Database.medicalDb.replace(this.name, this)
-
+      Database.medicalDb.replace(id, this)
    }
 }
 

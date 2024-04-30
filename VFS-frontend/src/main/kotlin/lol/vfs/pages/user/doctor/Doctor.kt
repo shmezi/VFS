@@ -57,7 +57,7 @@ object Doctor : Screen {
                   rModifier = Modifier.height(50.dp),
                )
             }
-             SelectionPanel(studentState, sWeight = 3f, showStatus = false)
+             SelectionPanel(studentState, sWeight = 3f, showStatus = true)
          }
       }
 

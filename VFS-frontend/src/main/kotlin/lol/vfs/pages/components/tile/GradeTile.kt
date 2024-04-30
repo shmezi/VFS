@@ -7,7 +7,7 @@ import lol.vfs.extensions.testStatus
 
 @Composable
 fun GradeTile(grade: Grade, showStatus: Boolean = true, onClick: (selected: Boolean) -> Unit) {
-   StatusTile(grade.prettyPrint(), grade.testStatus(), grade.treatmentStatus(), showStatus = showStatus) {
+   StatusTile(grade.getAge().gradePrettyPrint(), grade.testStatus(), grade.treatmentStatus(), showStatus = showStatus) {
       onClick(it)
    }
 }

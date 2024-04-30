@@ -1,5 +1,6 @@
 package lol.vfs.pages.auth
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -7,10 +8,12 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -18,11 +21,12 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import lol.vfs.client
+import lol.vfs.extensions.sp
 import lol.vfs.url
 import lol.vfs.model.users.UserType
-import lol.vfs.lib.printing.pq
 import lol.vfs.requests.RegisterRequest
 import lol.vfs.styling
+import kotlin.math.exp
 
 object Register : Screen {
    @Composable
@@ -40,11 +44,11 @@ object Register : Screen {
       var expanded by remember { mutableStateOf(false) }
       var selection by remember { mutableStateOf<UserType?>(null) }
       Column(
-         Modifier.horizontalScroll(rememberScrollState()).fillMaxSize(),
+         Modifier.fillMaxSize().horizontalScroll(rememberScrollState()),
          horizontalAlignment = Alignment.CenterHorizontally,
          verticalArrangement = Arrangement.Center,
       ) {
-         Text(style = styling, overflow = TextOverflow.Ellipsis, text = "Register")
+         Text(style = styling, overflow = TextOverflow.Ellipsis, text = "הרשמה", fontSize = 50.sp)
          TextField(name, {
             name = it
          }, placeholder = {
@@ -62,14 +66,16 @@ object Register : Screen {
             Text(style = styling, overflow = TextOverflow.Ellipsis, text = "ID")
          })
 
-         TextField(password,
+         TextField(
+            password,
             {
                password = it
             },
             placeholder = { Text(style = styling, overflow = TextOverflow.Ellipsis, text = "Password") },
             visualTransformation = PasswordVisualTransformation()
          )
-         TextField(password2,
+         TextField(
+            password2,
             {
                password2 = it
             },
@@ -82,7 +88,7 @@ object Register : Screen {
                   Text(
                      style = styling,
                      overflow = TextOverflow.Ellipsis,
-                     text = "${selection?.prettyPrint() ?: "Select type"} "
+                     text = selection?.prettyPrint() ?: "Select type "
                   )
                   Icon(painterResource("assets/arrow.png"), "arrow", Modifier.size(10.dp))
                }
@@ -93,6 +99,7 @@ object Register : Screen {
                UserType.entries.forEach {
                   DropdownMenuItem({
                      selection = it
+                     expanded = false
                   }) {
                      Text(style = styling, overflow = TextOverflow.Ellipsis, text = it.prettyPrint())
                   }
@@ -106,7 +113,7 @@ object Register : Screen {
                   contentType(ContentType.Application.Json)
                   setBody(
                      RegisterRequest(
-                        id, name, last, selection.pq("SELECTION") ?: return@runBlocking, password
+                        id, name, last, selection ?: return@runBlocking, password
                      )
 
                   )
@@ -116,7 +123,10 @@ object Register : Screen {
 
 
          }) {
-            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "Register")
+            Text(style = styling, overflow = TextOverflow.Ellipsis, text = "רשימה")
+         }
+         Button({ navigator.push(Login) }) {
+            Text("אחורה")
          }
       }
    }

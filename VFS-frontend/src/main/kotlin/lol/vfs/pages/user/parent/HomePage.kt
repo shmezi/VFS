@@ -30,6 +30,7 @@ import lol.vfs.styling
 fun HomePage(
    kids: SnapshotStateList<Student>,
 ) {
+
    var selectedKid by selectedKid
 
    //Selected kid/student info
@@ -54,11 +55,11 @@ fun HomePage(
 
          Column {
             TTable(
-               if (state)
+               if (!state)
                   TRow("המלצות רופא", "תאריך בדיקה", "שם")
                else
                   TRow("המלצות רופא", "תוצאה", "תאריך קבלת החיסון", "שם"),
-               * (if (state) selectedKid.rowifyTreatments() else selectedKid.rowifyTests())
+               * (if (!state) selectedKid.rowifyTreatments() else selectedKid.rowifyTests())
             )
          }
 
@@ -67,7 +68,7 @@ fun HomePage(
       5.w()
       Column(modifier = Modifier.weight(3f), horizontalAlignment = Alignment.CenterHorizontally) {
          val k = selectedKid ?: return@Column
-         Text("יש גם למלא באטר של משרד הבריאות", fontSize = 32.sp)
+         Text("יש גם למלא באתר של משרד הבריאות", fontSize = 32.sp)
          LinkButton("https://parents.education.gov.il/prhnet/contact-us/confirmations/annual-health-statement") {
             Text(style = styling, overflow = TextOverflow.Ellipsis, text = "לאישור באתר משרד החינוך")
          }
@@ -83,10 +84,17 @@ fun HomePage(
          modifier = Modifier.weight(2f),
          horizontalAlignment = Alignment.CenterHorizontally
       ) {
-         Text(style = styling, overflow = TextOverflow.Ellipsis, text = "ילדים", fontSize = 30.sp)
+         var t by remember { mutableStateOf("כאן יופיעו ילדיכם") }
+         Text(style = styling, overflow = TextOverflow.Ellipsis, text = t, fontSize = 30.sp)
+
+         t = if (kids.isEmpty())
+            "כאן יופיעו ילדיכם"
+         else
+            "ילדים"
+
          Column(Modifier.fillMaxSize().weight(3f).verticalScroll(rememberScrollState())) {
             for (k in kids) {
-               StudentTile(k, selectedKid, false) {
+               StudentTile(k, selectedKid, true) {
                   selectedKid = it
                }
             }

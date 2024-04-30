@@ -46,9 +46,9 @@ fun RowScope.AutoExplanations(type: UserType) {
       when (type) {
          UserType.ADMIN -> Explanations(APPROVED, DENIED, PARTIAL, DONE)
 
-         UserType.PARENT -> Explanations(APPROVED, DENIED)
+         UserType.PARENT -> Explanations(APPROVED, DENIED, PARTIAL, DONE)
 
-         UserType.DOCTOR -> Explanations(APPROVED, DENIED, DONE)
+         UserType.DOCTOR -> Explanations(APPROVED, DENIED, PARTIAL, DONE)
       }
    }
 }

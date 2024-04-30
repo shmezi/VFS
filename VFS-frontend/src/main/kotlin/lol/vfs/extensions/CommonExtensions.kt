@@ -97,7 +97,7 @@ fun Student?.rowifyApproval(status: Boolean): Array<TRow> {
                Text(
                   style = styling, overflow = TextOverflow.Ellipsis, text =
                   runBlocking {
-                     LocalCache.getGrade(s.grade).medicals[test.key]
+                     LocalCache.getGrade(s.startYear)?.medicals?.get(test.key) ?:""
                   }.toString()
                )
 
@@ -125,7 +125,7 @@ fun Student?.rowifyApproval(status: Boolean): Array<TRow> {
             {
                Text(style = styling, overflow = TextOverflow.Ellipsis, text =
                runBlocking {
-                  LocalCache.getGrade(s.grade).medicals[treatment.key]
+                  LocalCache.getGrade(s.startYear)?.medicals?.get(treatment.key)
                }.toString()
                )
             })
@@ -211,7 +211,7 @@ fun Student?.rowifyDocTreatments(): Array<TRow> {
                complete = t.value.afterEffects != null
                runBlocking { LocalCache.postToCloud(s.id) }
             }, enabled = t.value.approved, label = {
-               Text(style = styling, overflow = TextOverflow.Ellipsis, text = "תופאות לוואי")
+               Text(style = styling, overflow = TextOverflow.Ellipsis, text = "תופעות לוואי")
             })
          },
          {
@@ -244,7 +244,7 @@ fun Student?.rowifyTests(): Array<TRow> {
    for (test in tests) {
       val v = test.value
       rows.add(TRow(v.recommendations, v.results, runBlocking {
-         LocalCache.getGrade(s.grade).medicals[test.key]
+         LocalCache.getGrade(s.startYear)?.medicals?.get(test.key)
       }.toString(), test.key))
    }
    return rows.toTypedArray()
@@ -257,7 +257,7 @@ fun Student?.rowifyTreatments(): Array<TRow> {
    for (treatment in treatments) {
       val v = treatment.value
       rows.add(TRow(v.afterEffects, runBlocking {
-         LocalCache.getGrade(s.grade).medicals[treatment.key]
+         LocalCache.getGrade(s.startYear)?.medicals?.get(treatment.key)
       }.toString(), treatment.key))
    }
    return rows.toTypedArray()

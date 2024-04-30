@@ -8,7 +8,6 @@ import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
-import lol.vfs.lib.printing.pq
 import lol.vfs.model.organizational.Class
 import lol.vfs.model.users.UserType
 import lol.vfs.requests.UserRequest

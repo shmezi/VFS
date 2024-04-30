@@ -1,12 +1,12 @@
 package lol.vfs.data
 
-import lol.vfs.AuthValidation.bakeCookie
 import lol.vfs.AuthValidation.checkPassword
 import lol.vfs.model.users.User
 import lol.vfs.model.users.UserType
 import lol.vfs.requests.LoginRequest
 import lol.vfs.requests.RegisterRequest
 import lol.vfs.routing.UserSession
+import lol.vfs.utils.bakeCookie
 import org.mindrot.jbcrypt.BCrypt
 
 object UserAuth {
@@ -31,14 +31,16 @@ object UserAuth {
     */
    suspend fun LoginRequest.attemptLogin(): String? {
 
-      val user = users.get(id) ?: return null
+      val user = users.get(id) ?: return null //Get user from database
 
+      //Hash the entered password with salt and check if it is the same as the stored password
       val valid = checkPassword(user.pwd, password)
+
       if (!valid) return null
 
-      val cookie = bakeCookie()
-      user.validTokens.add(cookie)
-      return cookie
+      val cookie = bakeCookie() //Generate the token
+      user.validTokens.add(cookie) //Add token to valid token list
+      return cookie //Return the token
    }
 
    /**

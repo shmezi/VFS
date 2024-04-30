@@ -18,7 +18,7 @@ import lol.vfs.assets.ColorPallet
 import lol.vfs.model.users.Student
 import lol.vfs.extensions.*
 import lol.vfs.lib.gimatria.GimatriaConverter.toGimatria
-import lol.vfs.lib.printing.pq
+import lol.vfs.model.organizational.Age.Companion.toAge
 import lol.vfs.styling
 
 @Composable
@@ -50,7 +50,7 @@ fun StudentTile(
          Text(
             style = styling,
             overflow = TextOverflow.Ellipsis,
-            text = "${student.grade.toGimatria()}/${student.clazz}"
+            text = "${student.startYear.toAge().gradePrettyPrint()}/${student.clazz}"
          )
          3.h()
          if (showStatus)

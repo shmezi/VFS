@@ -1,14 +1,10 @@
 package lol.vfs
 
 
-import lol.vfs.lib.printing.pq
 import org.mindrot.jbcrypt.BCrypt
 
 object AuthValidation {
-   private const val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz"
-   fun randomString(length: Int) = (0 .. length).map { chars.random() }.joinToString("")
 
-   fun bakeCookie() = randomString(16)
    private val validUserPWD = "^[a-zA-Z0-9 ]*\$".toRegex()
 
    /**
@@ -47,10 +43,6 @@ object AuthValidation {
     * @param password Password to be checked
     */
    fun checkPassword(hash: String, password: String): Boolean {
-      hash.pq("HASH")
-      password.pq("PWD")
-//      if (!validatePassword(password)) return false
-
       return BCrypt.checkpw(password, hash)
    }
 }

@@ -39,7 +39,7 @@ object Parent : Screen {
       }
 
       PageLayout {
-         Row(modifier = Modifier.fillMaxSize().background(Color.Red), horizontalArrangement = Arrangement.End) {
+         Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.End) {
             Nav {
                page("home", "home") {
                   HomePage(kids)

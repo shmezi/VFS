@@ -12,7 +12,6 @@ import lol.vfs.data.UserAuth.attemptLogin
 import lol.vfs.data.UserAuth.authenticated
 import lol.vfs.data.UserAuth.destroy
 import lol.vfs.data.UserAuth.register
-import lol.vfs.lib.printing.pq
 import lol.vfs.requests.LoginRequest
 import lol.vfs.requests.RegisterRequest
 import lol.vfs.requests.UserRequest
@@ -39,14 +38,14 @@ fun Application.auth() {
 
       route("auth") {
          post("login") {
-            val loginRequest = call.receive<LoginRequest>()
+            val loginRequest = call.receive<LoginRequest>()//Receive user's entered data
             val token = loginRequest.attemptLogin()
             val user = Database.userDB.get(loginRequest.id)
-            if (token == null || user == null) {
+            if (token == null || user == null) { //If user is null or token is null -> No login :(
                call.respond(HttpStatusCode.Forbidden)
                return@post
             }
-            call.sessions.set("login-session", UserSession(loginRequest.id, token))
+            call.sessions.set("login-session", UserSession(loginRequest.id, token)) //Set token
             call.respond(HttpStatusCode.OK, user.public()) //Changed to public method
          }
 

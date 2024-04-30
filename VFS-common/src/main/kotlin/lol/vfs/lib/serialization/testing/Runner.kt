@@ -2,7 +2,6 @@ package lol.vfs.lib.serialization.testing
 
 import kotlinx.coroutines.runBlocking
 import lol.vfs.lib.db.Database
-import lol.vfs.lib.printing.pq
 import org.bson.BsonString
 
 suspend fun main() {
@@ -26,7 +25,6 @@ suspend fun main() {
             }
 
          }.getOrDefault("123123412") {
-         this.pq()
 
          }
 

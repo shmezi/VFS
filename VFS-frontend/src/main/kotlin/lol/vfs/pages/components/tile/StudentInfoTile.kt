@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import lol.vfs.LocalCache
 import lol.vfs.lib.gimatria.GimatriaConverter.toGimatria
+import lol.vfs.model.organizational.Age.Companion.toAge
 import lol.vfs.model.users.Student
 import lol.vfs.styling
 
@@ -24,7 +24,7 @@ fun StudentInfoPanel(student: Student?) {
       Column(Modifier, horizontalAlignment = Alignment.End) {
          Text(
             style = styling, overflow = TextOverflow.Ellipsis, text =
-            "${student.grade.toGimatria()}/${student.clazz}", fontSize = 30.sp
+            "${student.startYear.toAge().gradePrettyPrint()}/${student.clazz}", fontSize = 30.sp
          )
       }
       Column(
