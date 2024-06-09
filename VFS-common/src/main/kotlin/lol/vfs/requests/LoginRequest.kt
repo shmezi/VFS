@@ -8,4 +8,7 @@ import kotlinx.serialization.Serializable
  * @param password The attempted password used to log in with.
  */
 @Serializable
-data class LoginRequest(val id: String, val password: String)
+data class LoginRequest(
+   val id: String,
+   val password: String
+)

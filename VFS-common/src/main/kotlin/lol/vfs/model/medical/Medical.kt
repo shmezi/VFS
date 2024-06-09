@@ -1,6 +1,7 @@
 package lol.vfs.model.medical
 
 import kotlinx.serialization.Serializable
+import lol.vfs.lib.Date
 import lol.vfs.lib.db.Id
 import lol.vfs.model.organizational.Age
 import lol.vfs.utils.bakeCookie
@@ -20,6 +21,7 @@ data class Medical(
    val grade: Age,
    @BsonId
    @Id
-   val id: String = bakeCookie()
+   val id: String = bakeCookie(),
+   val defaultDate: Date = Date(2024,(1..12).random(),(1..28).random())
 ) {
 }

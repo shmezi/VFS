@@ -1,1 +1,2 @@
-rootProject.name = "VFS-frontend"
+rootProject.name = "VFS"
+include(":VFS-common")

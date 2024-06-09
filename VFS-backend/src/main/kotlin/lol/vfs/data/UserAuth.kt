@@ -19,6 +19,10 @@ object UserAuth {
       return users.get(id)?.validTokens?.contains(token) ?: false
    }
 
+   suspend fun type(id:String) : UserType?{
+      return users.get(id)?.type
+   }
+
    /**
     * Destroy a user session
     */
@@ -46,15 +50,30 @@ object UserAuth {
    /**
     *  Register a new user into the system
     */
-   suspend fun RegisterRequest.register(): User? {
+   suspend fun RegisterRequest.register(ids: List<String>? = null): User? {
       if (users.get(id) != null) return null
       val user = this
 
       when (user.type) {
-         UserType.ADMIN -> Database.adminDB
-         UserType.PARENT -> Database.parentDB
-         UserType.DOCTOR -> Database.doctorDB
-      }.getOrDefault(user.id) {}
+         UserType.ADMIN -> {
+            val newGrades = ids?.map { it.toInt() }
+            Database.adminDB.getOrDefault(user.id) {
+               grades.addAll(newGrades ?: return@getOrDefault)
+            }
+         }
+
+         UserType.PARENT -> {
+            Database.parentDB.getOrDefault(user.id) {
+               kids.addAll(ids ?: return@getOrDefault)
+            }
+         }
+         UserType.DOCTOR -> {
+            val newGrades = ids?.map { it.toInt() }
+            Database.doctorDB.getOrDefault(user.id) {
+               grades.addAll(newGrades ?: return@getOrDefault)
+            }
+         }
+      }
 
       return users.getOrDefault(id) {
          pwd = BCrypt.hashpw(user.password, BCrypt.gensalt())

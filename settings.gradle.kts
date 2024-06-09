@@ -10,6 +10,4 @@ plugins {
  */
 
 rootProject.name = "VFS"
-include("VFS-common")
-include("VFS-backend")
-include("VFS-frontend")
+include(":VFS-common",":VFS-backend",":VFS-frontend")

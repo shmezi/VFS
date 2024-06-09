@@ -12,9 +12,10 @@ import lol.vfs.data.UserAuth.attemptLogin
 import lol.vfs.data.UserAuth.authenticated
 import lol.vfs.data.UserAuth.destroy
 import lol.vfs.data.UserAuth.register
+import lol.vfs.data.UserAuth.type
+import lol.vfs.model.users.UserType
 import lol.vfs.requests.LoginRequest
 import lol.vfs.requests.RegisterRequest
-import lol.vfs.requests.UserRequest
 
 fun Application.auth() {
    install(Sessions) {
@@ -32,12 +33,27 @@ fun Application.auth() {
          }
 
       }
+      UserType.values().forEach {
+         session<UserSession>(it.name.lowercase()) {
+            validate { session ->
+               if (session.authenticated() && type(session.id) == it)
+                  session
+               else null
+            }
+            challenge {
+               call.respondRedirect("/login")
+            }
+         }
+      }
+
 
    }
    routing {
 
       route("auth") {
+
          post("login") {
+
             val loginRequest = call.receive<LoginRequest>()//Receive user's entered data
             val token = loginRequest.attemptLogin()
             val user = Database.userDB.get(loginRequest.id)

@@ -15,11 +15,12 @@ enum class ColorPallet(
    g: Int,
    b: Int,
 ) {
-   BG_A(226, 252, 214),
-   PRIMARY(20, 150, 127),
-   TXT_A(9, 93, 126),
-   BG_B(204, 236, 238),
-   TXT_B(241, 249, 255);
+   BG_A(199, 205, 217),
+   PRIMARY(191, 4, 54),
+   TXT_A(1, 58, 64),
+
+   BG_B(137, 171, 217),
+   TXT_B(22, 158, 242);
 
    /**
     * The [Color] representation of a given color pallet color.

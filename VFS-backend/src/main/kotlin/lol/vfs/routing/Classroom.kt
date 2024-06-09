@@ -10,12 +10,16 @@ import lol.vfs.data.Database
 import lol.vfs.data.School
 import lol.vfs.data.School.assignCurrentYear
 import lol.vfs.data.School.getGrade
+import lol.vfs.data.UserAuth.register
+import lol.vfs.lib.printing.pq
 import lol.vfs.model.organizational.Grade
 import lol.vfs.model.users.Student
+import lol.vfs.requests.RegisterRequest
 
 
 fun Application.classroom() {
    routing {
+      "https://ezra.lol/studydata".pq()
       get("studyData") {
          call.respond(School.studyData())
       }
@@ -43,13 +47,23 @@ fun Application.classroom() {
          val id = call.receive<String>()
          call.respond(School.getAdmin(id) ?: throw NotFoundException("Admin  not found with id of $id"))
       }
-      post("import") {
-         val f = call.receive<Pair<Map<Int, Grade>, List<Student>>>()
-         Database.studentDB.insertMany(*f.second.toTypedArray())
-         Database.gradeDB.insertMany(*f.first.values.toTypedArray())
-         for (g in f.first.values)
-            assignCurrentYear(g)
+      route("import"){
+         post("classroom") {
+            val f = call.receive<Pair<Map<Int, Grade>, List<Student>>>()
+            Database.studentDB.insertMany(*f.second.toTypedArray())
+            Database.gradeDB.insertMany(*f.first.values.toTypedArray())
+            for (g in f.first.values)
+               assignCurrentYear(g)
 
+         }
+         post("users") {
+            val f = call.receive<List<Pair<RegisterRequest, List<String>>>>()
+            for (v in f ){
+               v.first.register(v.second)
+
+            }
+
+         }
       }
       route("update") {
          post("student") {

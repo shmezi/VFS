@@ -27,22 +27,14 @@ dependencies {
    implementation("io.ktor:ktor-server-cio-jvm")
    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
    implementation(kotlin("reflect"))
-
    implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.10.1")
-// https://mvnrepository.com/artifact/org.springframework/spring-jcl
    implementation("org.mindrot:jbcrypt:0.4")
 }
 
-tasks.test {
-   useJUnitPlatform()
-}
 
 tasks {
    application {
-      mainClass = "MainKt"
+      mainClass = "lol.vfs.BackendKt"
 
    }
-}
-kotlin {
-   jvmToolchain(19)
 }

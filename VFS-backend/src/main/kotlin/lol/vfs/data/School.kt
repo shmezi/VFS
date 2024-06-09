@@ -42,7 +42,7 @@ object School {
          val medicals = all.filter { it.grade == grade.getAge() }
          val students = grade.getStudents().mapNotNull { getStudent(it) }
          for (medical in medicals) {
-            val date = Date(2024, 12, 0)
+            val date = medical.defaultDate
             grade.medicals[medical.name] = date
             if (medical.type == MedicalType.TEST) {
                for (student in students) {

@@ -24,9 +24,4 @@ dependencies {
 
 }
 
-tasks.test {
-   useJUnitPlatform()
-}
-kotlin {
-   jvmToolchain(19)
-}
+application.mainClass = "lol.ezra.CommonsKt"

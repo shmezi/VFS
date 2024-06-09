@@ -20,6 +20,7 @@ data class Grade(
    val classes: MutableMap<String, Class>,
    val medicals: MutableMap<String, Date> = mutableMapOf()
 ) {
+
    /**
     * Calculates the age of the students
     * @return The age that the students are currently at

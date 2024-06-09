@@ -29,8 +29,8 @@ import lol.vfs.pages.components.layout.table.TTable
 import lol.vfs.pages.components.nav.Nav
 import lol.vfs.pages.components.panel.SelectionPanel
 import lol.vfs.pages.components.tile.StudentInfoPanel
-import lol.vfs.requests.RegisterRequest
 import lol.vfs.requests.importClassroomData
+import lol.vfs.requests.importUsers
 import lol.vfs.styling
 import lol.vfs.url
 import java.io.File
@@ -92,20 +92,46 @@ object Admin : Screen {
                ) {
                   Text("כלי מנהל", fontSize = 42.sp)
                   var filePicker by remember { mutableStateOf(false) }
+
+                  var importing by remember { mutableStateOf(Importer.USER) }
+
+
                   Button({
+                     importing = Importer.CLASSROOM
                      filePicker = true
                   }) {
-                     Text("פתח קובץ")
+                     Text("פתח קובץ תלמידים")
                   }
+                  Button({
+                     importing = Importer.USER
+                     filePicker = true
+                  }) {
+                     Text("פתח קובץ משתמשים")
+                  }
+
                   FilePicker(show = filePicker, fileExtensions = listOf("csv")) { file ->
                      filePicker = false
-                     val s = importClassroomData(File(file?.path ?: return@FilePicker))
-                     runBlocking {
-                        client.post("import".url()) {
-                           contentType(ContentType.Application.Json)
-                           setBody(s)
+                     when(importing){
+                        Importer.USER -> {
+                           val s = importUsers(File(file?.path ?: return@FilePicker))
+                           runBlocking {
+                              client.post("import/users".url()) {
+                                 contentType(ContentType.Application.Json)
+                                 setBody(s)
+                              }
+                           }
+                        }
+                        Importer.CLASSROOM -> {
+                           val s = importClassroomData(File(file?.path ?: return@FilePicker))
+                           runBlocking {
+                              client.post("import/classroom".url()) {
+                                 contentType(ContentType.Application.Json)
+                                 setBody(s)
+                              }
+                           }
                         }
                      }
+
                   }
 
 
@@ -117,4 +143,8 @@ object Admin : Screen {
 
    }
 
+   enum class Importer {
+      USER,
+      CLASSROOM
+   }
 }
