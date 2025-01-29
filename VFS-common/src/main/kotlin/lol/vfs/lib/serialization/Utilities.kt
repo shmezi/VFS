@@ -1,4 +1,4 @@
-package lol.vfs.lib.serialization
+package lol.ezra.databases.org.serialization
 
 import lol.vfs.lib.db.Id
 import java.lang.reflect.Field

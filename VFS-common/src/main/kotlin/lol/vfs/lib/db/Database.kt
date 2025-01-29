@@ -2,7 +2,6 @@ package lol.vfs.lib.db
 
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
-import lol.vfs.lib.serialization.Codec
 import lol.vfs.lib.serialization.serializer.Serializer
 import lol.vfs.lib.serialization.serializer.SerializerBuilder
 import org.bson.BsonValue
@@ -14,7 +13,7 @@ class Database(
    scope: Database.() -> Unit
 ) {
    private val collections = mutableMapOf<String, CachedCollection<*, *>>()
-   private val codec = Codec(this)
+//   private val codec = Codec(this)
 
    fun getCollection(name: String) = collections[name]
 
@@ -33,12 +32,12 @@ class Database(
       return collection
    }
 
-
-   fun <T : Any, TID : Any> serialize(item: T) =
-      codec.getSerializer<T, TID>(item::class.java as Class<T>).serialize(item)
-
-   fun <T : Any, TID : Any> deserialize(clazz: Class<T>, value: BsonValue) =
-      codec.getSerializer<T, TID>(clazz).deserialize(value)
+//
+//   fun <T : Any, TID : Any> serialize(item: T) =
+//      codec.getSerializer<T, TID>(item::class.java as Class<T>).serialize(item)
+//
+//   fun <T : Any, TID : Any> deserialize(clazz: Class<T>, value: BsonValue) =
+//      codec.getSerializer<T, TID>(clazz).deserialize(value)
 
    fun <T : Any> Database.serializer(serializerBuilderScope: SerializerBuilder<T>.() -> Unit) {
       val builder = SerializerBuilder<T>()

@@ -4,7 +4,7 @@ import com.mongodb.client.model.EstimatedDocumentCountOptions
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.ReplaceOptions
 import kotlinx.coroutines.flow.firstOrNull
-import lol.vfs.lib.serialization.getIDField
+import lol.ezra.databases.org.serialization.getIDField
 
 class CachedCollection<T : Any, TID : Any>(private val type: Class<T>, val name: String, db: Database) {
    private val collection = db.mongo.getCollection(name, type)
